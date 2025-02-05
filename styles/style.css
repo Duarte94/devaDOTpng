@@ -1,0 +1,60 @@
+@media screen and (max-width: 412px){
+
+body{
+  background-color: black;
+}
+
+p{
+  color: white;
+}
+
+nav{
+  position: sticky;
+  top:0;
+  background-color: black;
+  height: 72px;
+  width: 100%;
+}
+
+.menu-nav{
+  background: none;
+  border: none;
+  width: 72px;
+  height: max-content;
+}
+
+.nav-cont{
+  display: flex;
+  height: max-content;
+  width: 100%;
+}
+
+#home-anchor a{
+  text-decoration: none;
+  color: white;
+  height: 1.3vh;
+}
+
+li{
+  list-style: none;
+}
+
+#hero{
+  width: 100%;
+}
+
+#about{
+  width:100%;
+}
+
+#likes-cont{
+  display: flex;
+  width: inherit;
+  justify-content: space-around;
+  text-align: center;
+}
+
+#hero{
+  width: 100%;
+}  
+}
