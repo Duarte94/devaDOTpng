@@ -55,8 +55,6 @@ li{
 }
 
 #hero{
-  width: 412px;
-  height: 824px;
-}
-  
+  width: 100%;
+}  
 }
