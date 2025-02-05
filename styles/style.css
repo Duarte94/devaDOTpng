@@ -1,4 +1,4 @@
-@media screen and (max-width: 412px){
+@media screen and (max-width: 5000px){
 
 body{
   background-color: black;
@@ -40,7 +40,7 @@ li{
 }
 
 #hero{
-  width: 100%;
+  width: 412px;
 }
 
 #about{
@@ -54,7 +54,8 @@ li{
   text-align: center;
 }
 
-#hero{
-  width: 100%;
+#hero-cont{
+  width: 412px;
+  background-image: url('/assets/Tenkawa_Kaoruko.png');
 }  
 }
