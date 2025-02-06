@@ -1,4 +1,4 @@
-@media screen and (max-width: 5000px){
+@media screen and (max-width: 412px){
 
 body{
   background-color: black;
@@ -55,8 +55,8 @@ li{
 }
 
 #hero-cont{
-  width: 100%;
-  height: 824px;
+  max-width: 412px;
+  height: auto;
   background-image: url('/assets/Tenkawa_Kaoruko.png');
 }  
 }
