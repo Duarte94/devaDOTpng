@@ -1,4 +1,4 @@
-@media screen and (max-width: 412px){
+@media screen and (max-width: 812px){
 
 body{
   background-color: black;
@@ -14,25 +14,36 @@ nav{
   background-color: black;
   height: 72px;
   width: 100%;
-}
-
-.menu-nav{
-  background: none;
-  border: none;
-  width: 72px;
-  height: max-content;
+  border: solid blue 3px;
+  margin: 0px;
 }
 
 .nav-cont{
   display: flex;
-  height: max-content;
-  width: 100%;
+  align-items: center;
+  height: 72px;
+  max-width: 812px;
+  border: solid red 2px;
+  margin: 0px;
+}
+
+#drop-btn{
+  background: none;
+  border: none;
+  width: 72px;
+  height: 72px;
+  border: solid yellow 1px;
+}
+
+#home-anchor{
+  display: block;
+  float: right;
+  border: solid white 1px;
 }
 
 #home-anchor a{
   text-decoration: none;
   color: white;
-  height: 1.3vh;
 }
 
 li{
