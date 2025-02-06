@@ -39,6 +39,10 @@ li{
   list-style: none;
 }
 
+main{
+  margin: 0px 16px 0px 16px;
+}
+
 #hero{
   width: 412px;
 }
