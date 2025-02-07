@@ -10,11 +10,22 @@
 </head>
 <body>
   <nav>
-    <ul id="first-drop" class="nav-cont">
+    <ul class="nav-cont">
       <li class="dropdown-cont">
-        <button id="drop-btn" class="menu-nav"><i class="fa-solid fa-bars fa-lg" style="color: #ffffff;"></i></button>
+        <button id="drop-btn" class="menu-nav"><i id="barsBtn" class="fa-solid fa-bars fa-lg" style="color: #ffffff;"></i></button>
+        
+        <li id="dropdown">
+          <div id="dropdown-list">
+            <ul id="dropdown-items">
+              <li class="drop-item"><p>Gallery</p></li>
+              <li class="drop-item"><p>Patreon</p></li>
+            </ul>
+          </div>
+        </li>
       </li>
-      <li id="home-anchor"><a class="menu-nav" href="index.html">D E V A</a></li>
+      <li id="home-anchor">
+        <a class="menu-nav" href="index.html">D E V A</a>
+      </li>
     </ul>
   </nav>
   
