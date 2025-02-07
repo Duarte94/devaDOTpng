@@ -49,15 +49,19 @@ nav{
 #barsBtn{
 }
 
-#home-anchor{
+#anchor-cont{
   display: flex;
   align-items: center;
   justify-content: center;
   width: 127px;
   height: 40px;
   margin: 16px;
-  float: right;
+  overflow: auto;
   border: solid green 1px;
+}
+
+#home-anchor{
+  float: right;
 }
 
 li{
