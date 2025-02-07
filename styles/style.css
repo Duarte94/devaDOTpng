@@ -21,6 +21,7 @@ nav{
 .nav-cont{
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   height: 72px;
   max-width: 812px;
   border: solid red 2px;
@@ -36,8 +37,6 @@ nav{
 }
 
 #home-anchor{
-  display: block;
-  float: right;
   border: solid white 1px;
 }
 
