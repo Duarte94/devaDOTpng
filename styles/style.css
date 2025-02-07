@@ -1,4 +1,4 @@
-@media screen and (max-width: 812px){
+@media screen and (max-width: 5000px){
 
 body{
   background-color: black;
@@ -8,42 +8,56 @@ p{
   color: white;
 }
 
+#dropdown{
+  display: none;
+}
+
 nav{
   position: sticky;
   top:0;
   background-color: black;
   height: 72px;
   width: 100%;
-  border: solid blue 3px;
+  border: solid blue 1px;
   margin: 0px;
 }
 
 .nav-cont{
   display: flex;
-  align-items: center;
-  height: 72px;
-  max-width: 812px;
-  border: solid red 2px;
+  height: 100%;
   margin: 0px;
+  padding: 0px;
+  border: solid red 1px;
+}
+
+.dropdown-cont{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 72px;
+  border: solid yellow 1px;
 }
 
 #drop-btn{
   background: none;
   border: none;
-  width: 72px;
-  height: 72px;
-  border: solid yellow 1px;
-}
-
-#home-anchor{
-  display: inline-block;
-  right: 0px;
+  width: 40px;
+  height: 40px;
   border: solid white 1px;
 }
 
-#home-anchor a{
-  text-decoration: none;
-  color: white;
+#barsBtn{
+}
+
+#home-anchor{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 127px;
+  height: 40px;
+  margin: 16px;
+  float: right;
+  border: solid green 1px;
 }
 
 li{
