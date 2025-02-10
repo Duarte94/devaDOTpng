@@ -2,11 +2,13 @@
 
 body{
   background-color: black;
+  font-family: REM;
 }
 
 a{
   text-decoration: none;
   color: white;
+  font-weight: bold;
 }
 
 p{
