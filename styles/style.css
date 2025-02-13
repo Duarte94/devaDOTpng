@@ -174,13 +174,22 @@ main > *:nth-child(n+2){
   position: relative;
 }
 
+.promo-cont:nth-child(1){
+  display: flex;
+  border:solid yellow 1px;
+}
+
 .promo-cont .promo-anchor{
   display: flex;
+  justify-content: center;
+  align-items: center;
   width: 96px;
   height: 48px;
   position: absolute;
   bottom: 0px;
   right: 0px;
+  border-radius: 8px;
+  margin: 4px;
   border: solid white 1px;
 }
 
