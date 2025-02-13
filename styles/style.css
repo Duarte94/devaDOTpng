@@ -5,6 +5,10 @@ body{
   font-family: REM;
 }
 
+body > *{
+  font-size: 16px;
+}
+
 a{
   text-decoration: none;
   color: white;
@@ -43,6 +47,8 @@ p{
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 600;
+  font-size: 24px;
 }
 
 #dropdown-items li:nth-child(n+2){
@@ -128,7 +134,11 @@ nav{
   position: absolute;
   align-items: center;
   justify-content: center;
-  width: 127px;
+  text-align: center;
+  padding: 0px;
+  font-size:32px;
+  font-weight: 600;
+  width: 128px;
   height: 40px;
   margin: 16px;
   overflow: auto;
@@ -185,6 +195,9 @@ main > *:nth-child(n+2){
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #52D0D0;
+  font-size: 24px;
+  font-weight: 600;
   width: 96px;
   height: 48px;
   position: absolute;
@@ -192,7 +205,6 @@ main > *:nth-child(n+2){
   right: 0px;
   border-radius: 8px;
   margin: 4px;
-  border: solid white 1px;
 }
 
 #hero-cont{
