@@ -142,6 +142,14 @@ li{
 
 main{
   margin: 0px 16px 0px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+main > *:nth-child(n+2){
+  margin: 28px 0px;
 }
 
 #about{
@@ -156,6 +164,22 @@ main{
   width: inherit;
   justify-content: space-around;
   text-align: center;
+}
+
+.promo-cont{
+  display: flex;
+  width: 380px;
+  height: 192px;
+  border: solid green 1px;
+  position: relative;
+}
+
+.promo-cont:nth-child(2){
+  display: flex;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  border: solid white 1px;
 }
 
 #hero-cont{
