@@ -174,8 +174,10 @@ main > *:nth-child(n+2){
   position: relative;
 }
 
-.promo-cont:nth-child(1){
+.promo-cont .promo-text{
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
   border:solid yellow 1px;
 }
 
