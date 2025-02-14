@@ -205,10 +205,29 @@ main > *:nth-child(n+2){
   margin: 4px;
 }
 
+#waitlist-cont{
+ display: flex;
+ flex-direction: column;
+ text-align: center;
+}
+
+#waitlist-cont p:nth-child(1){
+  font-size: 24px;
+  font-weight: 600;
+  outline: 1px solid green;
+}
+
+#waitlist-cont p:nth-child(2){
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  outline: 1px solid green;
+}
+
 #list-cont{
   display: flex;
   flex-direction: column;
-  width: 214;
+  width: 214px;
   height: 287px;
   padding: 24px 16px;
   font-weight: 500;
