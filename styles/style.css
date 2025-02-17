@@ -171,6 +171,12 @@ main > *:nth-child(n+2){
   padding: auto;
 }
 
+section{
+  display: flex;
+  flex-direction: column;
+  outline: 1px solid cyan;
+}
+
 #likes-cont{
   display: flex;
   width: inherit;
