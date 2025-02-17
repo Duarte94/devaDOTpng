@@ -144,6 +144,10 @@ nav{
   outline: 1px solid green;
 }
 
+#home-anchor img{
+  display: block;
+}
+
 li{
   list-style: none;
 }
