@@ -47,6 +47,7 @@ p{
   border: none;
   width: 40px;
   height: 40px;
+  margin: 16px;
   outline: 1px solid white;
 }
 
@@ -81,9 +82,8 @@ p{
   display: flex;
   height: 72px;
   width: 251px;
-  padding: 0px 16px;
   align-items: center;
-  justify-content: flex;
+  justify-content: flex-start;
 }
 
 #social-cont{
