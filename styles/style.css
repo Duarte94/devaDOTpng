@@ -1,4 +1,4 @@
-@media screen and (max-width: 5000px){
+@media screen and (max-width: 412px){
 
 body{
   background-color: black;
@@ -170,11 +170,6 @@ main > *:nth-child(n+2){
   width:100%;
   padding: auto;
   outline: 1px solid cyan;
-}
-
-.about-cont{
-  display: flex;
-  flex-direction: column;
 }
 
 #likes-cont{
