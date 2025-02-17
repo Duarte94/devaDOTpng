@@ -169,12 +169,12 @@ main > *:nth-child(n+2){
   flex-direction: column;
   width:100%;
   padding: auto;
+  outline: 1px solid cyan;
 }
 
-section{
+.about-cont{
   display: flex;
   flex-direction: column;
-  outline: 1px solid cyan;
 }
 
 #likes-cont{
