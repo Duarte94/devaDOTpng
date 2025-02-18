@@ -312,3 +312,7 @@ footer p{
   outline: 1px solid green;
 }
 }
+
+@media screen and (min-width: 513px) and (max-width:768px){
+  
+}
