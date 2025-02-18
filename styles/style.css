@@ -4,7 +4,6 @@ body{
   background-color: black;
   font-family: REM;
   margin: 0px;
-  overflow-x: hidden;
 }
 
 body > *{
@@ -204,6 +203,14 @@ main > *:nth-child(n+2){
   position: relative;
 }
 
+#commission-promo{
+  background-image: url('/assets/commission-banner.png');
+}
+
+#patreon-promo{
+  background-image: url('/assets/patreon-banner.png');
+}
+
 .promo-cont .promo-text{
   display: flex;
   justify-content: flex-start;
@@ -249,7 +256,6 @@ main > *:nth-child(n+2){
 #list-cont{
   display: flex;
   flex-direction: column;
-  width: 214px;
   height: 287px;
   padding: 24px 16px;
   font-weight: 500;
@@ -273,7 +279,6 @@ main > *:nth-child(n+2){
 footer{
   display: flex;
   height: 174px;
-  width: 100%;
   padding: 24px;
   flex-direction: column;
   justify-content: center;
