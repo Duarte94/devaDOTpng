@@ -4,6 +4,7 @@ body{
   background-color: black;
   font-family: REM;
   margin: 0px;
+  overflow-x: hidden;
 }
 
 body > *{
