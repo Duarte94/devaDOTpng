@@ -314,6 +314,8 @@ footer{
   display: flex;
   height: 174px;
   padding: 24px;
+  justify-self: center;
+  margin-top: 112px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
