@@ -360,13 +360,26 @@ footer p{
 
 /*GALLERY*/
 
-.main-gallery{
+.main-gallery > *:nth-child(n+2){
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-gallery header{
+  text-align: left;
+  margin-left: 16px;
+}
+
+#filter-cont{
   display: flex;
   flex-direction: column;
 }
 
-.main-gallery header{
-  text-align: flex-start;
+#filter-cont li{
+  display: flex;
+  justify-content: center;
 }
 
 
