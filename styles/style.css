@@ -155,10 +155,40 @@ li{
 
 #hero-cont{
   background-image: url('../assets/hero-512.png');
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
   width: 100%;
   height: 824px;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+#hero-cont > *{
+  margin: 0px 16px;
+  position: absolute;
+}
+
+#hero-cont img{
+  width: 281px;
+  height: 219px;
+  top: 353px;
+}
+
+#hero-cont a{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 281px;
+  height: 96px;
+  background-color: #52D0D0;
+  font-size: 32px;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow:
+  3px 0px 3px rgba(0, 0, 0, 0.5),
+  0px 3px 3px rgba(0, 0, 0, 0.5);
+  top: 592px;
 }
 
 /* MAIN */
@@ -171,7 +201,7 @@ main{
   align-items: center;
 }
 
-main > *:nth-child(n+2){
+main > *{
   margin: 56px 0px 0px 0px;
 }
 
@@ -252,7 +282,7 @@ main > *:nth-child(n+2){
 
 #waitlist-cont p:nth-child(2){
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 400;
   margin: 0 0 16px 0;
   outline: 1px solid green;
 }
@@ -295,9 +325,10 @@ footer ul{
   width: 100%;
   height: 48px;
   padding: 0px;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   outline: 1px solid yellow;
+  margin-bottom: 56px;
 }
 
 footer ul li{
@@ -312,6 +343,7 @@ footer ul li{
 }
 
 footer img{
+  width: 76px;
   outline: 1px solid blue;
 }
 
@@ -324,6 +356,34 @@ footer p{
 
 @media screen and (min-width: 513px) and (max-width:768px){
   
+  #commission-status p{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .title, #body-large, #likes p, #dislikes p{
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  #waitlist-cont p:nth-child(1){
+    font-size: 40px;
+  }
+
+  #waitlist-cont p:nth-child(2){
+    font-size: 18px;
+  }
+
+  .waitlist-item{
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .footer-link{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
   #hero-cont{
     background-image: url('../assets/hero-768.png');
   }
@@ -333,13 +393,53 @@ footer p{
   }
   
   #waitlist-cont{
-    width: 50vw;
+    width: 300px;
+  }
+
+  footer{
+    width: 70vw;
   }
   
 }
 
 @media screen and (min-width: 768px) and (max-width: 960px){
   
+  #commission-status p{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .important-word{
+    font-size: 40px !important;
+  }
+
+  #join-imp{
+    font-size: 40px !important;
+  }
+
+  .title, #body-large, #likes p, #dislikes p{
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  #waitlist-cont p:nth-child(1){
+    font-size: 40px;
+  }
+
+  #waitlist-cont p:nth-child(2){
+    font-size: 18px;
+  }
+
+  .waitlist-item{
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .footer-link{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
   #hero-cont{
     background-image: url('../assets/hero-1024.png');
   }
@@ -349,13 +449,45 @@ footer p{
   }
   
   #waitlist-cont{
-    width: 50vw;
+    width: 300px;
+  }
+
+  footer{
+    width: 70vw;
   }
   
 }
 
 @media screen and (min-width: 961px) and (max-width: 1024px){
   
+  #commission-status p{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .title, #body-large, #likes p, #dislikes p{
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  #waitlist-cont p:nth-child(1){
+    font-size: 40px;
+  }
+
+  #waitlist-cont p:nth-child(2){
+    font-size: 18px;
+  }
+
+  .waitlist-item{
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .footer-link{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
   #hero-cont{
     background-image: url('../assets/hero-1024.png');
   }
@@ -365,7 +497,7 @@ footer p{
   }
   
   #waitlist-cont{
-    width: 50vw;
+    width: 300px;
   }
   
   #banner-cont{
@@ -379,17 +511,49 @@ footer p{
     margin-right: 56px;
     margin-bottom: 0px;
   }
+
+  footer{
+    width: 70vw;
+  }
   
 }
 
 @media screen and (min-width: 1025px){
   
+  #commission-status p{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .title, #body-large, #likes p, #dislikes p{
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  #waitlist-cont p:nth-child(1){
+    font-size: 40px;
+  }
+
+  #waitlist-cont p:nth-child(2){
+    font-size: 18px;
+  }
+
+  .waitlist-item{
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .footer-link{
+    font-size: 20px;
+    font-weight: 600;
+  }
+
   #hero-cont{
     background-image: url('../assets/hero-1920.png');
   }
   
   #waitlist-cont{
-    width: 50vw;
+    width: 300px;
   }
   
   .promo-cont{
@@ -408,4 +572,8 @@ footer p{
     margin-bottom: 0px;
   }
   
+  footer{
+    width: 70vw;
+  }
+
 }
