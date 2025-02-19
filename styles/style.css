@@ -154,7 +154,7 @@ li{
 /* HERO*/
 
 #hero-cont{
-  background-image: url('./assets/hero-512.png');
+  background-image: url('../assets/hero-512.png');
   width: 100%;
   height: 824px;
   background-repeat: no-repeat;
@@ -203,13 +203,13 @@ main > *:nth-child(n+2){
 }
 
 #commission-promo{
-  background-image: url('/assets/commission-banner.png');
+  background-image: url('../assets/commission-banner.png');
   background-repeat: no-repeat;
   background-position: right;
 }
 
 #patreon-promo{
-  background-image: url('/assets/patreon-banner.png');
+  background-image: url('../assets/patreon-banner.png');
   background-repeat: no-repeat;
   background-position: right;
 }
@@ -325,7 +325,7 @@ footer p{
 @media screen and (min-width: 513px) and (max-width:768px){
   
   #hero-cont{
-    background-image: url('/assets/hero-768.png');
+    background-image: url('../assets/hero-768.png');
   }
   
   .promo-cont{
@@ -341,7 +341,7 @@ footer p{
 @media screen and (min-width: 768px) and (max-width: 960px){
   
   #hero-cont{
-    background-image: url('/assets/hero-1024.png');
+    background-image: url('../assets/hero-1024.png');
   }
   
   .promo-cont{
@@ -357,7 +357,7 @@ footer p{
 @media screen and (min-width: 961px) and (max-width: 1024px){
   
   #hero-cont{
-    background-image: url('/assets/hero-1024.png');
+    background-image: url('../assets/hero-1024.png');
   }
   
   .promo-cont{
@@ -385,7 +385,7 @@ footer p{
 @media screen and (min-width: 1025px){
   
   #hero-cont{
-    background-image: url('./assets/hero-1920.png');
+    background-image: url('../assets/hero-1920.png');
   }
   
   #waitlist-cont{
