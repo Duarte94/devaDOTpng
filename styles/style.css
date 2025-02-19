@@ -563,7 +563,7 @@ footer p{
   #banner-cont{
     display: flex;
     justify-content: center;
-    width: 90vw;
+    width: 920px;
     outline: 1px solid red;
   }
   
