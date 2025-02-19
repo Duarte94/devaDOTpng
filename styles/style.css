@@ -193,7 +193,7 @@ li{
 
 /* MAIN */
 
-main{
+.main-home{
   margin: 0px 16px 0px 16px;
   display: flex;
   flex-direction: column;
@@ -355,6 +355,20 @@ footer p{
   font-weight: 600;
   outline: 1px solid green;
 }
+
+
+
+/*GALLERY*/
+
+.main-gallery{
+  display: flex;
+  flex-direction: column;
+}
+
+.main-gallery header{
+  text-align: flex-start;
+}
+
 
 @media screen and (min-width: 513px) and (max-width:768px){
   
