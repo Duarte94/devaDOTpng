@@ -401,11 +401,24 @@ footer p{
 #filter-cont{
   display: flex;
   flex-direction: column;
+  background-color: #7154D6;
+  width: 148px;
+  height: 338px;
 }
 
 #filter-cont li{
   display: flex;
-  justify-content: center;
+  outline: 1px solid yellow;
+}
+
+#filter-cont li p{
+  text-align: center;
+}
+
+#check-cont{
+  width: 48px;
+  height: 48px;
+  outline: 1px solid red;
 }
 
 #gallery-cont{
@@ -419,14 +432,6 @@ footer p{
   height: 100px;
   margin: 8px;
   background-color: #52D0D0;
-}
-
-#gallery-nav{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 380px;
-  height: 48px;
 }
 
 #gallery-nav button{
