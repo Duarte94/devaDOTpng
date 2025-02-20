@@ -361,7 +361,7 @@ footer p{
 /*GALLERY*/
 
 .main-gallery{
-  width: 412px;
+  margin: 0px 16px;
 }
 
 .main-gallery > *:nth-child(n+2){
@@ -379,8 +379,9 @@ footer p{
 #search-cont{
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   position: relative;
+  outline: 1px solid yellow;
 }
 
 #s{
@@ -433,6 +434,7 @@ footer p{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
+  outline: 1px solid red;
 }
 
 .artwork{
@@ -440,6 +442,14 @@ footer p{
   height: 100px;
   margin: 8px;
   background-color: #52D0D0;
+}
+
+#gallery-nav{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  outline: 1px solid cyan;
 }
 
 #gallery-nav button{
