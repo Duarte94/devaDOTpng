@@ -380,6 +380,7 @@ footer p{
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 #s{
@@ -401,24 +402,31 @@ footer p{
 #filter-cont{
   display: flex;
   flex-direction: column;
+  padding: 0px;
+  justify-content: flex-start;
   background-color: #7154D6;
   width: 148px;
-  height: 338px;
+  position: absolute;
+  right: 8px;
+  top: 36px;
 }
 
 #filter-cont li{
   display: flex;
-  outline: 1px solid yellow;
+  align-items: center;
+  height: 48px;
 }
 
 #filter-cont li p{
   text-align: center;
 }
 
-#check-cont{
+.check-cont{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 48px;
   height: 48px;
-  outline: 1px solid red;
 }
 
 #gallery-cont{
