@@ -378,13 +378,22 @@ footer p{
 
 #search-cont{
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: flex-end;
   position: relative;
   outline: 1px solid yellow;
 }
 
+#search-form{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
 #s{
+  all: unset;
+  background-color: white;
+  border-radius: 4px;
   width: 330px;
   height: 48px;
   border-radius: 4px;
@@ -398,6 +407,7 @@ footer p{
   border: none;
   border-radius: 4px;
   color: white;
+  margin-left: 2px;
 }
 
 #filter-cont{
