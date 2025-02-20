@@ -418,8 +418,8 @@ footer p{
   background-color: #7154D6;
   width: 148px;
   position: absolute;
-  right: 8px;
-  top: 36px;
+  top: 34px;
+  border-radius: 4px;
 }
 
 #filter-cont li{
