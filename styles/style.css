@@ -28,7 +28,6 @@ p{
   left: 0px;
   width: 251px;
   height: 100vh;
-  outline: 1px solid cyan;
 }
 
 .dropdown-cont{
@@ -73,7 +72,6 @@ p{
 #dropdown-items li:nth-child(n+2){
   width: 251px;
   height: 48px;
-  outline: 1px solid pink;
 }
 
 #close-dropdown{
@@ -115,7 +113,6 @@ nav{
   background-color: black;
   height: 72px;
   width: 100%;
-  outline: 1px solid blue;
   margin: 0px;
   z-index: 2;
 }
@@ -126,7 +123,6 @@ nav{
   height: 100%;
   margin: 0px;
   padding: 0px;
-  outline: 1px solid red;
 }
 
 #anchor-cont{
@@ -140,7 +136,6 @@ nav{
   margin: 16px;
   overflow: auto;
   right: 0px;
-  outline: 1px solid green;
 }
 
 .sign-logo{
@@ -210,7 +205,6 @@ main > *{
   flex-direction: column;
   width:100%;
   padding: auto;
-  outline: 1px solid cyan;
 }
 
 #likes-cont{
@@ -228,7 +222,6 @@ main > *{
   display: flex;
   width: 380px;
   height: 192px;
-  outline: 1px solid green;
   position: relative;
 }
 
@@ -248,7 +241,6 @@ main > *{
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  outline: 1px solid yellow;
 }
 
 .promo-cont .promo-anchor{
@@ -277,14 +269,12 @@ main > *{
 #waitlist-cont p:nth-child(1){
   font-size: 24px;
   font-weight: 600;
-  outline: 1px solid green;
 }
 
 #waitlist-cont p:nth-child(2){
   font-size: 13px;
   font-weight: 400;
   margin: 0 0 16px 0;
-  outline: 1px solid green;
 }
 
 #list-cont{
@@ -303,7 +293,6 @@ main > *{
 
 .waitlist-item{
   display: flex;
-  outline: 1px solid pink;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -319,7 +308,6 @@ footer{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  outline: 1px solid cyan;
 }
 
 footer ul{
@@ -329,7 +317,6 @@ footer ul{
   padding: 0px;
   justify-content: space-around;
   align-items: center;
-  outline: 1px solid yellow;
   margin-bottom: 56px;
 }
 
@@ -341,19 +328,16 @@ footer ul li{
   font-weight: bold;
   height: 48px;
   width: 83px;
-  outline: 1px solid red;
 }
 
 footer img{
   width: 76px;
-  outline: 1px solid blue;
 }
 
 footer p{
   text-align: center;
   font-size: 13px;
   font-weight: 600;
-  outline: 1px solid green;
 }
 
 
@@ -380,7 +364,6 @@ footer p{
   display: flex;
   align-items: flex-end;
   position: relative;
-  outline: 1px solid yellow;
 }
 
 #search-form{
@@ -411,7 +394,7 @@ footer p{
 }
 
 #filter-cont{
-  display: flex;
+  display: none;
   flex-direction: column;
   padding: 0px;
   justify-content: flex-start;
@@ -420,6 +403,7 @@ footer p{
   position: absolute;
   top: 34px;
   border-radius: 4px;
+  z-index: 1;
 }
 
 #filter-cont li{
@@ -626,7 +610,6 @@ footer p{
     display: flex;
     justify-content: center;
     width: 90vw;
-    outline: 1px solid red;
   }
   
   #banner-cont #commission-promo{
@@ -686,7 +669,6 @@ footer p{
     display: flex;
     justify-content: center;
     width: 920px;
-    outline: 1px solid red;
   }
   
   #banner-cont #commission-promo{
