@@ -344,7 +344,7 @@ footer p{
 
 /*GALLERY*/
 
-.header-gallry p{
+.main-header p{
   font-size: 18px;
   font-weight: 600;
 }
@@ -463,6 +463,14 @@ footer p{
   width: 48px;
   text-align: center;
 }
+
+
+/*PATREON NSFW*/
+
+.main-nsfw{
+  margin: 0px 16px;
+}
+
 
 @media screen and (min-width: 513px) and (max-width:768px){
   
