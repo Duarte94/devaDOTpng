@@ -433,13 +433,12 @@ footer p{
   justify-self: center;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  outline: 1px solid red;
+  gap: 16px;
 }
 
 .artwork{
   width: 182px;
   height: 176px;
-  margin: 8px;
   background-color: #52D0D0;
   background-image: url('../assets/aniani.png');
   background-repeat: no-repeat;
@@ -462,6 +461,7 @@ footer p{
   color: white;
   height: 48px;
   width: 48px;
+  text-align: center;
 }
 
 @media screen and (min-width: 513px) and (max-width:768px){
