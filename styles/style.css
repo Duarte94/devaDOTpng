@@ -442,8 +442,10 @@ footer p{
 
 #gallery-cont{
   display: grid;
+  justify-self: center;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
+  width: 380px;
   outline: 1px solid red;
 }
 
