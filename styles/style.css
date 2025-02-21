@@ -453,6 +453,10 @@ footer p{
   height: 176px;
   margin: 8px;
   background-color: #52D0D0;
+  background-image: url('../assets/aniani.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 #gallery-nav{
