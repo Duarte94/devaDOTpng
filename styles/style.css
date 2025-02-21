@@ -471,6 +471,38 @@ footer p{
   margin: 0px 16px;
 }
 
+.section-description{
+  display: flex;
+  flex-direction: column;
+}
+
+.section-description p{
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.card-cont{
+  gap: 32px;
+}
+
+.card-element{
+  border-radius: 4px;
+}
+
+.tier-name{
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  background-color: #7154D6;
+  height: 46px;
+}
+
+.card-description{
+  display: flex;
+  height: 92px;
+  justify-content: space-between;
+}
+
 
 @media screen and (min-width: 513px) and (max-width:768px){
   
