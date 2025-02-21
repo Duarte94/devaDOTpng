@@ -439,8 +439,8 @@ footer p{
 .artwork{
   width: 182px;
   height: 176px;
-  background-color: #52D0D0;
-  background-image: url('../assets/aniani.png');
+  background-color: purple;
+  background-image: url('../assets/Ani-Elfa.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
