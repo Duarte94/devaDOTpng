@@ -344,6 +344,11 @@ footer p{
 
 /*GALLERY*/
 
+.header-gallry p{
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .main-gallery{
   margin: 0px 16px;
 }
