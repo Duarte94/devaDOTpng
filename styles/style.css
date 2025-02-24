@@ -550,8 +550,44 @@ footer p{
 
 /* FANARTS */
 
+.main-fanarts{
+  margin: 0px 16px;
+}
 
+#fanart-cont{
+  display: grid;
+  justify-self: center;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 16px;
+}
 
+.fanart{
+  display: flex;
+  width: 182px;
+  height: 176px;
+  position: relative;
+  background-color: purple;
+  background-image: url('../assets/Ani-Elfa.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.fanart p{
+  display: flex;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background-color: #52D0D0;
+  width: 127px;
+  height: 24px;
+  font-size: 14px;
+  font-weight: 400;
+  align-items: center;
+  margin: 0px;
+  padding: 4px;
+}
 
 @media screen and (min-width: 513px) and (max-width:768px){
   
