@@ -589,6 +589,25 @@ footer p{
   padding: 4px;
 }
 
+#fanart-nav{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  margin-top: 16px !important;
+  outline: 1px solid cyan;
+}
+
+#fanart-nav button{
+  all: unset;
+  color: white;
+  height: 48px;
+  width: 48px;
+  text-align: center;
+}
+
+
 @media screen and (min-width: 513px) and (max-width:768px){
   
   #commission-status p{
