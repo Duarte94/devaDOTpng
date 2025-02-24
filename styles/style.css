@@ -611,8 +611,42 @@ footer p{
 
 /* COMMISSIONS */
 
+#tos-cont p{
+  font-size: 16px;
+  font-weight: 600;
+}
+
+#tos-advice{
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .main-comm{
   mmargin: 0px 16px;
+}
+
+.main-comm a:nth-child(3){
+  display: flex;
+  height: 48px;
+  background-color: #52D0D0;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.main-comm a:nth-child(4){
+  display: flex;
+  height: 48px;
+  background-color: #7154D6;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .reference-drop img{
