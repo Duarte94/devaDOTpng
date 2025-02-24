@@ -609,6 +609,18 @@ footer p{
 
 
 
+/* COMMISSIONS */
+
+.main-comm{
+  mmargin: 0px 16px;
+}
+
+.reference-drop img{
+  height: 176px;
+}
+
+
+
 @media screen and (min-width: 513px) and (max-width:768px){
   
   #commission-status p{
