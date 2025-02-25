@@ -615,12 +615,16 @@ footer p{
   margin: 0px 16px;
 }
 
-#tos-cont p{
+#tos-cont{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 16px;
   font-weight: 600;
 }
 
 #tos-advice{
+  text-align: center;
   font-size: 13px;
   font-weight: 600;
 }
@@ -659,6 +663,10 @@ footer p{
   gap: 24px;
   border-radius: 10px;
   outline: 1px solid #52D0D0;
+}
+
+#tos-cont p:hover .tos-modal{
+  display: flex;
 }
 
 .tos-accept-title{
