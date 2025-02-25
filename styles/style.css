@@ -649,6 +649,59 @@ footer p{
   font-weight: bold;
 }
 
+.tos-modal{
+  display: none;
+  flex-direction: column;
+  width: 380px;
+  height: 480px;
+  overflow: scroll;
+  background-color: black;
+  gap: 24px;
+  border-radius: 10px;
+  outline: 1px solid #52D0D0;
+}
+
+.tos-accept-title{
+  text-align: center;
+  color: #52D0D0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.tos-accept-description{
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tos-draw{
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.tos-button-cont{
+  display: flex;
+  gap: 4px;
+  height: 48px;
+  justify-content: center;
+  align-items: center;
+}
+
+.tos-button-cont button{
+  all: unset;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  background-color: #52D0D0;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  height: 48px;
+  border-radius: 4px;
+}
+
 #prices{
   display: flex;
   align-items: center;
