@@ -611,6 +611,10 @@ footer p{
 
 /* COMMISSIONS */
 
+.main-comm{
+  margin: 0px 16px;
+}
+
 #tos-cont p{
   font-size: 16px;
   font-weight: 600;
@@ -619,10 +623,6 @@ footer p{
 #tos-advice{
   font-size: 13px;
   font-weight: 600;
-}
-
-.main-comm{
-  mmargin: 0px 16px;
 }
 
 .main-comm a:nth-child(3){
@@ -668,8 +668,23 @@ footer p{
   height: 48px;
 }
 
+.reference-drop{
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+}
+
 .reference-drop img{
   height: 176px;
+}
+
+.reference-drop p{
+  display: flex;
+  text-align: flex-end;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 
