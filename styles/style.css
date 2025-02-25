@@ -649,6 +649,25 @@ footer p{
   font-weight: bold;
 }
 
+#prices{
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.ref-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: #7154D6;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  height: 48px;
+}
+
 .reference-drop img{
   height: 176px;
 }
