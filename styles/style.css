@@ -665,7 +665,7 @@ footer p{
   outline: 1px solid #52D0D0;
 }
 
-#tos-cont p:hover .tos-modal{
+#tos-cont p:hover + .tos-modal{
   display: flex;
 }
 
