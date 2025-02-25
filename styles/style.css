@@ -687,6 +687,11 @@ footer p{
   font-weight: 500;
 }
 
+#extra-info{
+  font-size: 16px;
+  font-weight: 500;
+}
+
 
 
 @media screen and (min-width: 513px) and (max-width:768px){
