@@ -656,7 +656,7 @@ footer p{
 }
 
 .tos-modal{
-  display: flex;
+  display: none;
   flex-direction: column;
   position: absolute;
   width: 380px;
@@ -668,11 +668,11 @@ footer p{
   padding: 0px 16px;
   box-sizing: border-box;
   top: 28vh;
+  z-index: 2;
 }
 
-tos-cont p{
-  display: block;
-  position: relative;
+.tos-modal p{
+  margin: 0px;
 }
 
 #tos-cont p:active + .tos-modal{
@@ -684,6 +684,7 @@ tos-cont p{
   color: #52D0D0;
   font-size: 16px;
   font-weight: 600;
+  margin-top: 24px;
 }
 
 .tos-accept-description{
