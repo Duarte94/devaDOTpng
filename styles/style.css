@@ -63,7 +63,7 @@ p{
 
 .drop-item{
   display: flex;
-  justify-content: center;
+  margin-left: 16px;
   align-items: center;
   font-weight: 600;
   font-size: 24px;
