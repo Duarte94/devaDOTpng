@@ -546,6 +546,7 @@ footer p{
   border-radius: 4px;
   text-align: center;
   background-color: #52D0D0;
+  margin-top: 24px;
 }
 
 
@@ -655,8 +656,9 @@ footer p{
 }
 
 .tos-modal{
-  display: none;
+  display: flex;
   flex-direction: column;
+  position: absolute;
   width: 380px;
   height: 480px;
   overflow: scroll;
@@ -664,9 +666,15 @@ footer p{
   gap: 24px;
   border-radius: 10px;
   outline: 1px solid #52D0D0;
+  padding: 0px 16px;
 }
 
-#tos-cont p:hover + .tos-modal{
+tos-cont p{
+  display: block;
+  position: relative;
+}
+
+#tos-cont p:active + .tos-modal{
   display: flex;
 }
 
@@ -680,6 +688,7 @@ footer p{
 .tos-accept-description{
   font-size: 16px;
   font-weight: 500;
+  margin-top: 16px;
 }
 
 .tos-draw{
