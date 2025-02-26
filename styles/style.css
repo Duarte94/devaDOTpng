@@ -663,10 +663,11 @@ footer p{
   height: 480px;
   overflow: scroll;
   background-color: black;
-  gap: 24px;
   border-radius: 10px;
   outline: 1px solid #52D0D0;
   padding: 0px 16px;
+  box-sizing: border-box;
+  top: 26vh;
 }
 
 tos-cont p{
