@@ -675,7 +675,7 @@ footer p{
   margin: 0px;
 }
 
-#tos-cont p:active + .tos-modal{
+#tos-cont p:hover + .tos-modal{
   display: flex;
 }
 
