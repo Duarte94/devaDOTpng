@@ -732,6 +732,7 @@ footer p{
 .ref-title{
   display: flex;
   justify-content: center;
+  position: relative;
   align-items: center;
   text-align: center;
   background-color: #7154D6;
@@ -742,9 +743,13 @@ footer p{
 }
 
 .reference-drop{
-  display: flex;
+  display: none;
   justify-content: space-between;
   padding: 16px;
+}
+
+.ref-title:hover + .reference-drop{
+  display: flex;
 }
 
 .reference-drop img{
