@@ -954,6 +954,26 @@ footer p{
   
 }
 
+/* COMMISSION AND PATREONS CARDS */
+@media screen and (min-width: 961px){
+  /* COMMISSIONS */
+  
+  .main-comm a:nth-child(3){
+    width: 60vw;
+    justify-self: center;
+  }
+  
+  .main-comm a:nth-child(4){
+    width: 60vw;
+    justify-self: center;
+  }
+  
+  .prices-cont{
+    width: 60vw;
+    justify-self: center;
+  }
+}
+
 @media screen and (min-width: 961px) and (max-width: 1024px){
   
   #commission-status p{
