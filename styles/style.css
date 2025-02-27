@@ -733,6 +733,11 @@ footer p{
   font-weight: 600;
 }
 
+.comm-card{
+  border-radius: 4px;
+  outline: 1px solid #7154D6;
+}
+
 .ref-title{
   display: flex;
   justify-content: center;
@@ -742,7 +747,6 @@ footer p{
   background-color: #7154D6;
   font-size: 16px;
   font-weight: bold;
-  border-radius: 4px;
   height: 48px;
 }
 
