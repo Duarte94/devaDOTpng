@@ -823,10 +823,17 @@ footer p{
   
   .main-comm a:nth-child(3){
     width: 60vw;
+    justify-self: center;
   }
   
   .main-comm a:nth-child(4){
     width: 60vw;
+    justify-self: center;
+  }
+  
+  .reference-cont{
+    width: 60vw;
+    justify-self: center;
   }
   
 
