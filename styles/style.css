@@ -926,6 +926,27 @@ footer p{
   #waitlist-cont{
     width: 300px;
   }
+  
+  
+  
+  /* COMMISSIONS */
+  
+  .main-comm a:nth-child(3){
+    width: 60vw;
+    justify-self: center;
+  }
+  
+  .main-comm a:nth-child(4){
+    width: 60vw;
+    justify-self: center;
+  }
+  
+  .prices-cont{
+    width: 60vw;
+    justify-self: center;
+  }
+  
+  
 
   footer{
     width: 70vw;
