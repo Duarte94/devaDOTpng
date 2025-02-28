@@ -440,7 +440,7 @@ footer p{
 .artwork{
   width: 182px;
   height: 176px;
-  background-color: purple;
+  background-color: #7154D6;
   background-image: url('../assets/Ani-Elfa.png');
   background-repeat: no-repeat;
   background-position: center;
@@ -454,7 +454,6 @@ footer p{
   align-items: center;
   height: 48px;
   margin-top: 16px !important;
-  outline: 1px solid cyan;
 }
 
 #gallery-nav button{
@@ -490,7 +489,6 @@ footer p{
 
 .card-element{
   border-radius: 4px;
-  outline: 1px solid magenta;
 }
 
 .tier-name{
@@ -511,7 +509,6 @@ footer p{
   margin: 0px;
   justify-content: space-between;
   padding: 16px 24px;
-  outline: 1px solid green;
 }
 
 .card-description p:nth-child(1){
@@ -522,7 +519,6 @@ footer p{
   font-weight: 500;
   margin: 0px;
   margin-right: 24px;
-  outline: 1px solid yellow;
 }
 
 .tier-price{
@@ -533,7 +529,6 @@ footer p{
   justify-content: center;
   align-items: center;
   margin: 0px;
-  outline: 1px solid red;
 }
 
 .join-patreon{
@@ -573,7 +568,7 @@ footer p{
   width: 182px;
   height: 176px;
   position: relative;
-  background-color: purple;
+  background-color: #7154D6;
   background-image: url('../assets/Ani-Elfa.png');
   background-repeat: no-repeat;
   background-position: center;
@@ -602,7 +597,6 @@ footer p{
   align-items: center;
   height: 48px;
   margin-top: 16px !important;
-  outline: 1px solid cyan;
 }
 
 #fanart-nav button{
@@ -991,6 +985,17 @@ footer p{
     width: 580px;
     justify-self: center;
   }
+  
+  /* PATREON CARD */
+  
+  .card-cont{
+    width: 580px;
+  }
+
+  .join-patreon{
+    width: 580px;
+  }
+
 }
 
 @media screen and (min-width: 961px) and (max-width: 1024px){
