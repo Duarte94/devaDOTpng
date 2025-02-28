@@ -849,6 +849,15 @@ footer p{
 
 @media screen and (min-width: 668px){
   
+  #s{
+    height: 32px;
+  }
+  
+  #filter-btn{
+    height: 32px;
+    width: 32px;
+  }
+  
 #gallery-cont{
   display: grid;
   justify-self: center;
