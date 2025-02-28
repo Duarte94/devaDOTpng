@@ -853,7 +853,7 @@ footer p{
     height: 32px;
   }
   
-  #filter-btn{
+  #search-cont > form button{
     height: 32px;
     width: 32px;
   }
