@@ -884,6 +884,16 @@ footer p{
   height: 200px;
 }
 
+.card-cont{
+  justify-self: center;
+  width: 60vw;
+}
+
+.join-patreon{
+  justify-self: center;
+  width: 60vw;
+}
+
 }
 
 @media screen and (min-width: 768px) and (max-width: 960px){
