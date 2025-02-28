@@ -489,6 +489,8 @@ footer p{
 
 .card-element{
   border-radius: 4px;
+  outline: 1px solid #7154D6;
+  overflow: hidden;
 }
 
 .tier-name{
