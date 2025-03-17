@@ -1,28 +1,5 @@
-const filterButton = document.getElementById("filter-btn");
-const filterDrop = document.getElementById("filter-cont");
-
 const commTitle = document.getElementsByClassName("comm-card");
 const commDrop = document.getElementsByClassName("reference-drop");
-
-filterButton.addEventListener("click", function(event) {
-    event.stopPropagation(); // Previene la propagación del clic para evitar cerrarlo inmediatamente
-    toggleFilterDrop(); // Llama a la función para mostrar/ocultar
-});
-
-document.addEventListener("click", function() {
-    // Oculta el dropdown si se hace clic fuera del botón o del dropdown
-    if (filterDrop.style.display === "flex") {
-        filterDrop.style.display = "none";
-    }
-});
-
-function toggleFilterDrop() {
-    if (filterDrop.style.display === "flex") {
-        filterDrop.style.display = "none"; // Oculta si está visible
-    } else {
-        filterDrop.style.display = "flex"; // Muestra si está oculto
-    }
-}
 
 commTitle.addEventListener("click", function(event){
   event.stopPropagation();
@@ -42,3 +19,20 @@ function toggleCommDrop(){
     commDrop.style.display = "flex"
   }
 }
+
+
+
+// Cargar el contenido del footer.html
+fetch('/footer.html')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('No se pudo cargar el footer: ' + response.status);
+    }
+    return response.text(); // Leer el contenido del archivo como texto
+  })
+  .then(data => {
+    document.getElementById('footer').innerHTML = data; // Insertar el contenido en el div
+  })
+  .catch(error => {
+    console.error('Hubo un problema:', error);
+  });
