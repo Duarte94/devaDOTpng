@@ -625,6 +625,11 @@ footer p{
   font-weight: 600;
 }
 
+#tos-btn{
+  display: flex;
+  margin: 16px;
+}
+
 #tos-advice{
   text-align: center;
   font-size: 13px;
