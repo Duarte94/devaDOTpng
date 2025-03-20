@@ -620,14 +620,27 @@ footer p{
 #tos-cont{
   display: flex;
   justify-content: center;
+  gap: 16px;
   align-items: center;
   font-size: 16px;
   font-weight: 600;
+  height: 48px;
 }
 
 #tos-btn{
   display: flex;
-  margin: 16px;
+  height: 48px;
+  width: 48px;
+  justify-content: center;
+  align-items: center;
+}
+
+#tos-btn button{
+  all: unset;
+  border-radius: 4px;
+  outline: 2px solid white;
+  height: 20px;
+  width: 20px;
 }
 
 #tos-advice{
