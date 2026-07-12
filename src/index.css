@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cyan: #52D0D0;
+  --color-purple: #7154D6;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background-color: black;
+  font-family: 'REM', system-ui, sans-serif;
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid #52D0D0;
+  outline-offset: 2px;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+p {
+  color: white;
+}
+
+ul {
+  list-style: none;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}

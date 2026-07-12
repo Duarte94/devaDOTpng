@@ -1,0 +1,47 @@
+# --- Dependencies ---
+node_modules
+.pnpm-store
+
+# --- Build output ---
+dist
+dist-ssr
+
+# --- Environment / Secrets ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+
+# --- Debug / Logs ---
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# --- Cache ---
+.pnp
+.pnp.js
+.vite
+
+# --- IDE / Editor ---
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# --- OS ---
+Thumbs.db
+*.~
+
+# --- Testing ---
+coverage
+.nyc_output
+
+# --- Image upload ---
+artworks-src/
+scripts/.cache/
+*.tsbuildinfo
