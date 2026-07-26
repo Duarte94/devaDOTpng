@@ -1,6 +1,6 @@
 interface Props {
   children: string
-  variant?: 'cyan' | 'purple' | 'white'
+  variant?: 'cyan' | 'purple' | 'white' | 'red'
   className?: string
 }
 
@@ -8,6 +8,7 @@ const variantStyles: Record<string, string> = {
   cyan: 'bg-cyan/15 text-cyan border-cyan/30',
   purple: 'bg-purple/15 text-white border-purple/30',
   white: 'bg-white/10 text-white/80 border-white/20',
+  red: 'bg-red-500/15 text-red-400 border-red-500/30',
 }
 
 export default function Badge({ children, variant = 'cyan', className = '' }: Props) {

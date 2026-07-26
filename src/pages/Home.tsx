@@ -34,8 +34,8 @@ export default function Home() {
           <GlassCard className="p-8">
             <p className="text-cyan text-lg font-semibold mb-4">About me:</p>
             <p className="text-white/70 text-sm leading-relaxed">
-              Hi! I'm from Argentina, I love drawing and playing videogames.<br />
-              I started by copying my favorite characters from anime series, and over time, that passion grew into creating my own characters, poses, and a style that continues to evolve with each artwork.<br />
+              Hi! I'm from Argentina and I love drawing and playing videogames.<br />
+              I started by copying my favorite characters from anime series, and over time, that passion grew into creating my own characters, poses, and a style that continues to evolve with every piece.<br />
               My goal is to help bring your ideas to life with creativity and attention to detail.
             </p>
             <div className="flex gap-12 mt-6">
@@ -50,7 +50,7 @@ export default function Home() {
               <div>
                 <p className="text-cyan text-sm font-semibold mb-2">Dislikes:</p>
                 <div className="flex flex-wrap gap-1.5">
-                  <Badge variant="purple">Summer</Badge>
+                  <Badge variant="red">Summer</Badge>
                 </div>
               </div>
             </div>
@@ -63,14 +63,16 @@ export default function Home() {
               className="relative overflow-hidden p-8"
               style={{ backgroundImage: `url(${commissionBanner})`, backgroundPosition: 'right', backgroundRepeat: 'no-repeat', backgroundSize: 'auto 100%' }}
             >
-              <p className="text-white text-lg font-semibold">
-                Commission status:<br />
-                <span className="text-cyan font-bold text-3xl">OPEN</span>
-              </p>
-              <div className="mt-6">
-                <Button to="/commissions" variant="primary" className="h-10 px-6 text-sm">
-                  +Info
-                </Button>
+              <div className="w-1/2 md:w-auto">
+                <p className="text-white text-lg font-semibold">
+                  Commission status:<br />
+                  <span className="text-cyan font-bold text-3xl">OPEN</span>
+                </p>
+                <div className="mt-6">
+                  <Button to="/commissions" variant="primary" className="h-10 px-6 text-sm">
+                    +Info
+                  </Button>
+                </div>
               </div>
             </GlassCard>
           </motion.div>
@@ -80,14 +82,16 @@ export default function Home() {
               className="relative overflow-hidden p-8"
               style={{ backgroundImage: `url(${patreonBanner})`, backgroundPosition: 'right', backgroundRepeat: 'no-repeat', backgroundSize: 'auto 100%' }}
             >
-              <p className="text-white text-lg font-semibold">
-                Join Patreon to get exclusive<br />
-                <span className="text-cyan font-bold text-3xl">DISCOUNTS.</span>
-              </p>
-              <div className="mt-6">
-                <Button href="https://patreon.com" variant="primary" className="h-10 px-6 text-sm">
-                  Join
-                </Button>
+              <div className="w-1/2 md:w-auto">
+                <p className="text-white text-lg font-semibold">
+                  Join Patreon to get exclusive<br />
+                  <span className="text-cyan font-bold text-3xl">DISCOUNTS.</span>
+                </p>
+                <div className="mt-6">
+                  <Button href="https://patreon.com" variant="primary" className="h-10 px-6 text-sm">
+                    Join
+                  </Button>
+                </div>
               </div>
             </GlassCard>
           </motion.div>
