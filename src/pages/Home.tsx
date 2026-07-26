@@ -34,7 +34,7 @@ export default function Home() {
           <GlassCard className="p-8">
             <p className="text-cyan text-lg font-semibold mb-4">About me:</p>
             <p className="text-white/70 text-sm leading-relaxed">
-              Hi! I'm from Argentina, I love videogames and drawing.<br />
+              Hi! I'm from Argentina, I love drawing and playing videogames.<br />
               I started by copying my favorite characters from anime series, and over time, that passion grew into creating my own characters, poses, and a style that continues to evolve with each artwork.<br />
               My goal is to help bring your ideas to life with creativity and attention to detail.
             </p>

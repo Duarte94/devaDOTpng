@@ -72,13 +72,13 @@ export default function Navbar() {
               </NavLink>
             ))}
             <div className="flex items-center gap-2 ml-4 pl-4 border-l border-white/10">
-              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/50 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
+              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
                 <i className="fa-brands fa-discord fa-sm" />
               </button>
-              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/50 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
+              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
                 <i className="fa-brands fa-instagram fa-sm" />
               </button>
-              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/50 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
+              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
                 <i className="fa-brands fa-x-twitter fa-sm" />
               </button>
             </div>
@@ -141,14 +141,14 @@ export default function Navbar() {
                   ))}
                 </div>
 
-                <div className="shrink-0 flex bg-slate-900 opacity-75 justify-center gap-4 p-2 border-t border-white/10">
-                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/50 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
+                <div className="shrink-0 flex bg-slate-900 justify-center gap-4 p-2 border-t border-white/10">
+                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
                     <i className="fa-brands fa-discord" />
                   </button>
-                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/50 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
+                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
                     <i className="fa-brands fa-instagram" />
                   </button>
-                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/50 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
+                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
                     <i className="fa-brands fa-x-twitter" />
                   </button>
                 </div>
