@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from './ui/Button'
 import GlassCard from './ui/GlassCard'
@@ -21,12 +22,16 @@ export default function ToSModal({ accepted, onAcceptChange }: Props) {
         container.scrollTop = 0
         container.focus()
       }
-      const handler = (e: KeyboardEvent) => {
-        if (e.key === 'Escape') setShowModal(false)
-      }
-      window.addEventListener('keydown', handler)
-      return () => window.removeEventListener('keydown', handler)
     }
+  }, [showModal])
+
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
   }, [showModal])
 
   return (
@@ -49,53 +54,64 @@ export default function ToSModal({ accepted, onAcceptChange }: Props) {
         <span className="text-cyan underline decoration-cyan/40">terms of service</span>.
       </button>
 
-      <AnimatePresence>
-        {showModal && (
-          <>
+      {createPortal(
+        <AnimatePresence>
+          {showModal && (
             <motion.div
+              key="overlay"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md"
-              onClick={() => setShowModal(false)}
-            />
-            <motion.div
-              ref={containerRef as any}
-              onKeyDown={handleKeyDown}
-              initial={{ opacity: 0, scale: 0.92, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 20 }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              tabIndex={-1}
-              className="fixed inset-4 md:inset-x-1/4 md:inset-y-[10vh] z-50 glass-strong rounded-2xl overflow-y-auto p-6 md:p-8 outline-none"
-              role="dialog"
-              aria-modal="true"
-              aria-label="Terms of Service"
+              className="fixed inset-0 z-[100]"
             >
-              <div className="space-y-6">
-                {tosSections.map((section) => (
-                  <GlassCard key={section.title} className="p-6 space-y-4">
-                    <h2 className="text-cyan text-lg font-semibold">{section.title}</h2>
-                    <p className="text-white/70 text-sm leading-relaxed">
-                      {section.content}
-                    </p>
-                  </GlassCard>
-                ))}
-              </div>
+              <motion.div
+                key="backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-black/70 backdrop-blur-md pointer-events-none"
+              />
+              <motion.div
+                key="modal"
+                ref={containerRef as any}
+                onKeyDown={handleKeyDown}
+                initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: 20 }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                tabIndex={-1}
+                className="fixed inset-x-4 bottom-4 top-[15vh] md:inset-x-1/4 md:inset-y-[10vh] glass-strong rounded-2xl overflow-y-auto p-5 md:p-8 outline-none"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Terms of Service"
+              >
+                <div className="space-y-6">
+                  {tosSections.map((section) => (
+                    <GlassCard key={section.title} className="p-4 md:p-6 space-y-4">
+                      <h2 className="text-cyan text-lg font-semibold">{section.title}</h2>
+                      <p className="text-white/70 text-sm leading-relaxed">
+                        {section.content}
+                      </p>
+                    </GlassCard>
+                  ))}
+                </div>
 
-              <div className="flex gap-3 mt-8">
-                <Button variant="ghost" onClick={() => setShowModal(false)} className="flex-1 h-12">
-                  Close
-                </Button>
-                <Button variant="primary" onClick={() => { onAcceptChange(true); setShowModal(false) }} className="flex-1 h-12">
-                  Accept
-                </Button>
-              </div>
+                <div className="flex gap-3 mt-8">
+                  <Button variant="ghost" onClick={() => setShowModal(false)} className="flex-1 h-12">
+                    Close
+                  </Button>
+                  <Button variant="primary" onClick={() => { onAcceptChange(true); setShowModal(false) }} className="flex-1 h-12">
+                    Accept
+                  </Button>
+                </div>
+              </motion.div>
             </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   )
 }
