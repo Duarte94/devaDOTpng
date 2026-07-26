@@ -71,7 +71,7 @@ export default function ToSModal({ accepted, onAcceptChange }: Props) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 bg-black/70 backdrop-blur-md pointer-events-none"
+                className="fixed inset-0 bg-black/25 backdrop-blur-[4px] pointer-events-none"
               />
               <motion.div
                 key="modal"
@@ -82,7 +82,7 @@ export default function ToSModal({ accepted, onAcceptChange }: Props) {
                 exit={{ opacity: 0, scale: 0.92, y: 20 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
                 tabIndex={-1}
-                className="fixed inset-x-4 bottom-4 top-[15vh] md:inset-x-1/4 md:inset-y-[10vh] glass-strong rounded-2xl overflow-y-auto p-5 md:p-8 outline-none"
+                className="fixed inset-x-4 bottom-4 top-[15vh] md:inset-x-1/4 md:inset-y-[10vh] bg-[#0a0a0a] border border-white/10 rounded-2xl overflow-y-auto p-5 md:p-8 outline-none"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Terms of Service"

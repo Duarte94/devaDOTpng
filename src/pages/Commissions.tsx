@@ -47,12 +47,14 @@ export default function Commissions() {
           variant="primary"
           to="/"
           disabled={!accepted}
-          className="w-full h-12 text-base"
+          className="w-full h-12 px-6 text-sm md:text-base disabled:opacity-60"
         >
           MAKE YOUR REQUEST
         </Button>
-        <Button variant="secondary" href="https://trello.com" rel="noopener" className="w-full h-12 text-base">
-          <i className="fa-brands fa-trello mr-2" /> Check your commission status on Trello
+        <Button variant="secondary" href="https://trello.com" rel="noopener" className="w-full h-auto min-h-12 px-5 py-3 text-sm md:text-base leading-snug">
+          <span className="inline-flex items-center gap-2">
+            <i className="fa-brands fa-trello" /> Check your commission status on Trello
+          </span>
         </Button>
       </motion.div>
 
