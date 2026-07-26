@@ -1,5 +1,15 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { MotionConfig } from 'framer-motion'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    const el = document.getElementById('main-scroll')
+    if (el) el.scrollTop = 0
+  }, [pathname])
+  return null
+}
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Background from './components/Background'
@@ -15,6 +25,7 @@ export default function App() {
   return (
     <MotionConfig reducedMotion="user">
       <BrowserRouter>
+        <ScrollToTop />
         <div className="h-dvh flex flex-col bg-black font-['REM'] relative uppercase tracking-wide leading-none">
           <Background />
           <Navbar />

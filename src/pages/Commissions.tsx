@@ -33,7 +33,7 @@ export default function Commissions() {
         <ToSModal accepted={accepted} onAcceptChange={setAccepted} />
       </motion.div>
 
-      <p className="text-white/60 text-xs text-center mt-2">
+      <p className="text-white/80 text-sm text-center mt-2">
         PLEASE READ THE TERMS OF SERVICE FIRST
       </p>
 
@@ -49,7 +49,7 @@ export default function Commissions() {
           disabled={!accepted}
           className="w-full h-12 text-base"
         >
-          Make your request
+          MAKE YOUR REQUEST
         </Button>
         <Button variant="secondary" href="https://trello.com" rel="noopener" className="w-full h-12 text-base">
           <i className="fa-brands fa-trello mr-2" /> Check your commission status on Trello

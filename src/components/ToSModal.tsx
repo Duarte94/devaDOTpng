@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Button from './ui/Button'
+import GlassCard from './ui/GlassCard'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 import { tosSections } from '../content/tos'
 
@@ -11,12 +12,15 @@ interface Props {
 
 export default function ToSModal({ accepted, onAcceptChange }: Props) {
   const [showModal, setShowModal] = useState(false)
-  const closeRef = useRef<HTMLButtonElement>(null)
   const { containerRef, handleKeyDown } = useFocusTrap(showModal)
 
   useEffect(() => {
     if (showModal) {
-      closeRef.current?.focus()
+      const container = containerRef.current
+      if (container) {
+        container.scrollTop = 0
+        container.focus()
+      }
       const handler = (e: KeyboardEvent) => {
         if (e.key === 'Escape') setShowModal(false)
       }
@@ -26,7 +30,7 @@ export default function ToSModal({ accepted, onAcceptChange }: Props) {
   }, [showModal])
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center justify-center gap-4">
       <button
         onClick={() => setShowModal(true)}
         role="checkbox"
@@ -63,19 +67,20 @@ export default function ToSModal({ accepted, onAcceptChange }: Props) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 20 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="fixed inset-4 md:inset-x-1/4 md:inset-y-[10vh] z-50 glass-strong rounded-2xl overflow-y-auto p-6 md:p-8"
+              tabIndex={-1}
+              className="fixed inset-4 md:inset-x-1/4 md:inset-y-[10vh] z-50 glass-strong rounded-2xl overflow-y-auto p-6 md:p-8 outline-none"
               role="dialog"
               aria-modal="true"
               aria-label="Terms of Service"
             >
               <div className="space-y-6">
                 {tosSections.map((section) => (
-                  <div key={section.title}>
-                    <p className="text-cyan text-lg font-semibold text-center">{section.title}</p>
-                    <p className="text-white/70 text-sm leading-relaxed text-center">
+                  <GlassCard key={section.title} className="p-6 space-y-4">
+                    <h2 className="text-cyan text-lg font-semibold">{section.title}</h2>
+                    <p className="text-white/70 text-sm leading-relaxed">
                       {section.content}
                     </p>
-                  </div>
+                  </GlassCard>
                 ))}
               </div>
 
