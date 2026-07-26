@@ -24,7 +24,7 @@ export default function Hero() {
 
       <div className="absolute inset-0 bg-linear-to-r from-black/60 to-transparent" />
 
-      <div className="absolute inset-0 flex items-center px-6 md:px-16">
+      <div className="absolute inset-0 flex items-center justify-end md:justify-start px-6 md:px-16">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}

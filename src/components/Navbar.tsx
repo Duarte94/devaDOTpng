@@ -33,6 +33,15 @@ export default function Navbar() {
     }
   }, [open])
 
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [open])
+
   return (
     <nav className="sticky top-0 z-50 glass-strong border-b border-white/10">
       <div className="w-full flex items-center justify-between h-16 px-4">
@@ -110,7 +119,7 @@ export default function Navbar() {
                 aria-modal="true"
                 aria-label="Navigation menu"
               >
-                <div className="flex items-center justify-between h-16 px-4 border-b border-white/10 shrink-0">
+                <div className="flex items-center gap-4 h-16 px-4 border-b border-white/10 shrink-0">
                   <button
                     ref={closeRef}
                     type="button"
@@ -120,19 +129,22 @@ export default function Navbar() {
                   >
                     <i className="fa-solid fa-xmark fa-lg" />
                   </button>
+                  <Link to="/" onClick={() => setOpen(false)}>
+                    <img className="h-8 w-auto" src={devasign} alt="Deva logo" />
+                  </Link>
                 </div>
 
-                <div className="flex-1 bg-[#0a0a0a] opacity-90 px-4 py-4 h-fit space-y-1">
+                <div className="flex-1 bg-[#0a0a0a] px-4 py-4 space-y-2">
                   {links.map((link) => (
                     <NavLink
                       key={link.to}
                       to={link.to}
                       onClick={() => setOpen(false)}
                       className={({ isActive }) =>
-                        `flex items-center h-12 px-4 rounded-xl font-semibold text-sm no-underline transition-all duration-200 ${
+                        `flex items-center h-12 px-4 rounded-xl font-semibold text-base no-underline transition-all duration-200 ${
                           isActive
                             ? 'text-white border-l-2 border-cyan bg-white/5'
-                            : 'text-white/70 hover:text-white hover:bg-white/5'
+                            : 'text-white/70 border-l-2 border-transparent hover:text-white hover:bg-white/5'
                         }`
                       }
                     >
@@ -141,15 +153,15 @@ export default function Navbar() {
                   ))}
                 </div>
 
-                <div className="shrink-0 flex bg-slate-900 justify-center gap-4 p-2 border-t border-white/10">
-                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
-                    <i className="fa-brands fa-discord" />
+                <div className="shrink-0 flex bg-[#0a0a0a] justify-center gap-4 p-2 border-t border-white/10">
+                  <button type="button" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
+                    <i className="fa-brands fa-discord fa-sm" />
                   </button>
-                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
-                    <i className="fa-brands fa-instagram" />
+                  <button type="button" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
+                    <i className="fa-brands fa-instagram fa-sm" />
                   </button>
-                  <button type="button" tabIndex={-1} aria-hidden="true" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
-                    <i className="fa-brands fa-x-twitter" />
+                  <button type="button" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
+                    <i className="fa-brands fa-x-twitter fa-sm" />
                   </button>
                 </div>
               </motion.aside>
