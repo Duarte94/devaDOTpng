@@ -8,7 +8,7 @@ interface Props {
 
 export default function GlassCard({ children, className = '', style }: Props) {
   return (
-    <div className={`glass rounded-2xl ${className}`} style={style}>
+    <div className={`bg-[#141414] border border-white/5 rounded-2xl ${className}`} style={style}>
       {children}
     </div>
   )

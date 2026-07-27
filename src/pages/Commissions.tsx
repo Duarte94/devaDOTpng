@@ -33,7 +33,7 @@ export default function Commissions() {
         <ToSModal accepted={accepted} onAcceptChange={setAccepted} />
       </motion.div>
 
-      <p className="text-white/80 text-sm text-center mt-2">
+      <p className="text-white text-sm text-center mt-2">
         PLEASE READ THE TERMS OF SERVICE FIRST
       </p>
 
