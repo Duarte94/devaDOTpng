@@ -5,6 +5,7 @@ import Badge from '../components/ui/Badge'
 import Button from '../components/ui/Button'
 import { fetchWaitlist } from '../api/queries'
 import { useQuery } from '../hooks/useQuery'
+import UnderConstruction from '../components/ui/UnderConstruction'
 import commissionBanner from '../assets/commission-banner.png'
 import patreonBanner from '../assets/patreon-banner.png'
 
@@ -98,28 +99,31 @@ export default function Home() {
         </div>
 
         <motion.section {...fadeUp}>
-          <GlassCard className="p-8 max-w-sm mx-auto text-center">
-            <p className="text-white text-xl font-semibold mb-1">WAITLIST</p>
-            {wlLoading ? (
-              <p className="text-white/60 text-xs mb-6">Loading...</p>
-            ) : waitlist ? (
-              <>
-                <p className="text-white/60 text-xs mb-6">
-                  Available slots: {waitlist.slots}/{waitlist.total}
-                </p>
-                <div className="space-y-2">
-                  {waitlist.entries.map((name) => (
-                    <div
-                      key={name}
-                      className="flex items-center justify-center h-12 rounded-xl border border-white/10 bg-white/5 text-cyan font-medium text-sm"
-                    >
-                      {name}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : null}
-          </GlassCard>
+          <div className="relative">
+            <UnderConstruction />
+            <GlassCard className="p-8 max-w-sm mx-auto text-center">
+              <p className="text-white text-xl font-semibold mb-1">WAITLIST</p>
+              {wlLoading ? (
+                <p className="text-white/60 text-xs mb-6">Loading...</p>
+              ) : waitlist ? (
+                <>
+                  <p className="text-white/60 text-xs mb-6">
+                    Available slots: {waitlist.slots}/{waitlist.total}
+                  </p>
+                  <div className="space-y-2">
+                    {waitlist.entries.map((name) => (
+                      <div
+                        key={name}
+                        className="flex items-center justify-center h-12 rounded-xl border border-white/10 bg-white/5 text-cyan font-medium text-sm"
+                      >
+                        {name}
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </GlassCard>
+          </div>
         </motion.section>
       </main>
     </>

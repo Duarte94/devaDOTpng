@@ -10,8 +10,7 @@ import {
 } from './mockData'
 import type { Paginated, ArtworkItem } from './types'
 
-if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true') {
-  const mock = new MockAdapter(client, { delayResponse: 400 })
+const mock = new MockAdapter(client, { delayResponse: 400 })
 
   mock.onGet('/gallery').reply((config) => {
     const page = Number(config.params?.page) || 1
@@ -53,4 +52,3 @@ if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true') {
   mock.onGet('/patreon/tiers').reply(200, patreonTiersMock)
 
   mock.onGet('/waitlist').reply(200, waitlistMock)
-}

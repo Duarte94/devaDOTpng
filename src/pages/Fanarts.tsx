@@ -6,6 +6,7 @@ import type { ArtworkItem } from '../api/types'
 import Pagination from '../components/ui/Pagination'
 import Lightbox from '../components/ui/Lightbox'
 import GlassCard from '../components/ui/GlassCard'
+import UnderConstruction from '../components/ui/UnderConstruction'
 import { fetchFanarts } from '../api/queries'
 import { useQuery } from '../hooks/useQuery'
 import { scrollMainToTop } from '../lib/scroll'
@@ -62,11 +63,14 @@ export default function Fanarts() {
       ) : error ? (
         <p className="text-red-400 text-center mt-16">{error}</p>
       ) : (
-        <ArtworkGrid
-          items={items}
-          onItemClick={setLightboxItem}
-          className="mt-8"
-        />
+        <div className="relative">
+          <UnderConstruction />
+          <ArtworkGrid
+            items={items}
+            onItemClick={setLightboxItem}
+            className="mt-8"
+          />
+        </div>
       )}
 
       {totalPages > 1 && (

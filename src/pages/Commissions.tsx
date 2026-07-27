@@ -4,6 +4,7 @@ import SectionTitle from '../components/ui/SectionTitle'
 import ToSModal from '../components/ToSModal'
 import CommissionCard from '../components/CommissionCard'
 import Button from '../components/ui/Button'
+import UnderConstruction from '../components/ui/UnderConstruction'
 import { fetchPrices, fetchCommissionExtras } from '../api/queries'
 import { useQuery } from '../hooks/useQuery'
 import aniElfa from '../assets/Ani-Elfa.webp'
@@ -66,17 +67,20 @@ export default function Commissions() {
       >
         <p className="text-white text-lg font-semibold mb-4">Prices</p>
 
-        {loading ? (
-          <p className="text-white/50 text-center mt-4">Loading...</p>
-        ) : error ? (
-          <p className="text-red-400 text-center mt-4">{error}</p>
-        ) : (
-          <div className="space-y-3">
-            {(prices ?? []).map((p) => (
-              <CommissionCard key={p.title} title={p.title} image={aniElfa} prices={p.prices} />
-            ))}
-          </div>
-        )}
+        <div className="relative">
+          <UnderConstruction />
+          {loading ? (
+            <p className="text-white/50 text-center mt-4">Loading...</p>
+          ) : error ? (
+            <p className="text-red-400 text-center mt-4">{error}</p>
+          ) : (
+            <div className="space-y-3">
+              {(prices ?? []).map((p) => (
+                <CommissionCard key={p.title} title={p.title} image={aniElfa} prices={p.prices} />
+              ))}
+            </div>
+          )}
+        </div>
 
         <p className="text-white/60 text-sm mt-6 leading-relaxed">
           <span className="text-white font-semibold">Extras</span><br /><br />

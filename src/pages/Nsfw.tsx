@@ -5,6 +5,7 @@ import Button from '../components/ui/Button'
 import GlassCard from '../components/ui/GlassCard'
 import { fetchPatreonTiers } from '../api/queries'
 import { useQuery } from '../hooks/useQuery'
+import UnderConstruction from '../components/ui/UnderConstruction'
 
 export default function Nsfw() {
   const { data: tiers, loading, error } = useQuery(fetchPatreonTiers, [])
@@ -43,16 +44,19 @@ export default function Nsfw() {
       ) : error ? (
         <p className="text-red-400 text-center mt-16">{error}</p>
       ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.15 }}
-          className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4"
-        >
-          {(tiers ?? []).map((tier) => (
-            <PatreonCard key={tier.name} {...tier} />
-          ))}
-        </motion.div>
+        <div className="relative">
+          <UnderConstruction />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.15 }}
+            className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            {(tiers ?? []).map((tier) => (
+              <PatreonCard key={tier.name} {...tier} />
+            ))}
+          </motion.div>
+        </div>
       )}
 
       <motion.div
