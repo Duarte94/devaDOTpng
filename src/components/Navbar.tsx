@@ -43,7 +43,7 @@ export default function Navbar() {
   }, [open])
 
   return (
-    <nav className="sticky top-0 z-50 glass-strong border-b border-white/10">
+    <nav className="sticky top-0 z-50 flex-shrink-0 w-full bg-[#0a0a0a] backdrop-blur-md border-b border-white/10">
       <div className="w-full flex items-center justify-between h-16 px-4">
         <div className="flex items-center gap-4">
           {isMobile && (
@@ -104,7 +104,7 @@ export default function Navbar() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="fixed inset-0 z-40 bg-black/90"
+                className="fixed bg-black/50 backdrop-blur-sm h-screen w-full"
                 onClick={() => setOpen(false)}
               />
               <motion.aside
