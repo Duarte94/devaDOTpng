@@ -15,7 +15,7 @@ El frontend está **terminado en cuanto a estructura**: SPA con React 19 + Vite 
 Lo que falta es de otra naturaleza:
 
 1. **La estrategia de datos de producción quedó implícita.** El sitio ya está deployado y funciona sin backend: los mocks se registran siempre (`setupMock.ts:13`), con datos congelados al commit y `VITE_USE_MOCKS` sin efecto. Falta decidir si ese modelo (fallback client-side) es el definitivo o si se agrega una API `/api` en el Worker (P0-1).
-2. **No hay contenido real**: `src/api/artworks.generated.json` está vacío (`[]`).
+2. **No hay contenido real**: `src/api/artworks.generated.json` está vacío (`[]`); hoy lo tapa un seed de demo en `mockData.ts` (5+3 placeholders SVG) + overlay `UnderConstruction`.
 3. **Quedan placeholders visibles** en CTAs principales ("MAKE YOUR REQUEST" → `/`, Trello genérico, Patreon genérico, botones sociales muertos).
 4. **Deuda de pulido**: sin favicon/OG image, años desactualizados, typos en el ToS, un bug de accesibilidad en `CommissionCard`, assets muertos de ~3 MB y ausencia total de tests.
 
@@ -79,7 +79,7 @@ wrangler.jsonc                # assets.directory=./dist + assets.run_worker_firs
 
 ### P0-2 · Manifest de artworks vacío
 
-**Qué pasa:** `src/api/artworks.generated.json` es `[]` → Gallery muestra "No artworks match…" y Fanarts queda vacía incluso en dev, sin importar la estrategia de P0-1. Las Functions propuestas leen este mismo archivo, así que es bloqueante para el contenido. Las secciones sin datos hoy muestran el overlay `UnderConstruction` como parche visual, pero el contenido real sigue pendiente.
+**Qué pasa:** `src/api/artworks.generated.json` es `[]` → no hay artwork real. Desde `d96e0a0`, `mockData.ts:11-28` inyecta un **seed de demo** (`sampleGallery`/`sampleFanarts`: 5+3 ítems con SVGs data-URI) cuando el manifest está vacío, así que dev y el sitio deployado muestran tiles de relleno bajo el overlay `UnderConstruction` (verificado en el deploy). Con el manifest real, el seed se desactiva solo (`hasRealData`). El Worker de P0-1 opción B leería el mismo manifest, así que el contenido real sigue siendo el bloqueante de fondo.
 
 **Solución:** correr el pipeline documentado en `docs/upload-artworks.md`:
 
@@ -87,10 +87,10 @@ wrangler.jsonc                # assets.directory=./dist + assets.run_worker_firs
 2. Completar `.env` con credenciales R2.
 3. `pnpm upload-artworks` → commitear `artworks.generated.json`.
 
-**Mitigación temporal (mientras no haya artwork):** agregar `src/api/artworks.demo.json` con 4–6 entradas apuntando a los assets bundled (`hero-1024.png`, `Ani-Elfa.webp`, etc.) para que dev y preview muestren la UI poblada. Consumirlo desde `mockData.ts` solo si `artworks.generated.json` está vacío.
+**Mitigación actual (ya en código):** el seed de `mockData.ts:11-28` cubre la previsualización sin R2; mantenerlo hasta que haya artworks reales (se desactiva automáticamente con manifest no vacío).
 
 - [ ] Subir artworks reales y commitear manifest.
-- [ ] (Opcional) seed de demo para previsualización sin R2.
+- [x] Seed de demo en `mockData.ts` (commit `d96e0a0`).
 
 ### P0-3 · Setup en dev y flag `VITE_USE_MOCKS` muerto
 
@@ -297,6 +297,7 @@ No hay ningún test ni framework configurado; el CI solo corre lint + build. Mí
 - SPA routing verificado: `/`, `/gallery`, `/fanarts` y rutas inexistentes devuelven `index.html` 200 (correcto: no existe `404.html`).
 - `pnpm-lock.yaml` regenerado/commiteado (P2-3) y workflow legacy de GH Pages (`.github/workflows/static.yml`) eliminado.
 - `og:url`/`canonical` apuntan a la URL del Worker (provisional).
+- Verificación visual con Playwright (2026-10-19): 7 rutas 200, **0 errores de consola/requests fallidos**, waitlist `Anon1..5` y estado `OPEN` en Home, seed de demo + overlay `UnderConstruction` en Gallery/Fanarts, flujo ToS (checkbox → modal → Accept → precios) OK, tiers de Patreon OK, 404 OK, drawer móvil (390px) OK.
 
 **Pendientes:**
 

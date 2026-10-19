@@ -41,7 +41,7 @@ devaDOTpng/
     │   ├── types.ts            # ArtworkItem, PriceTier, PriceCategory, PatreonTier, WaitlistResponse, Paginated<T>
     │   ├── client.ts           # Axios instance (baseURL from VITE_API_URL)
     │   ├── setupMock.ts        # axios-mock-adapter registration (runs unconditionally, incl. prod)
-    │   ├── mockData.ts         # Imports artworks.generated.json + static price/patreon/waitlist data
+    │   ├── mockData.ts         # artwork manifest + inline sample seed + static price/patreon/waitlist data
     │   ├── queries.ts          # Typed fetchers: fetchGallery, fetchFanarts, fetchPrices, etc.
     │   └── artworks.generated.json   # R2 manifest (committed; currently [])
     ├── assets/                 # Bundled site-chrome images (hero banners, logo, Ani-Elfa preview)
@@ -86,7 +86,7 @@ Defined in `src/App.tsx` (all wrapped in `<MotionConfig>` and a `bg-black` flex 
   - `GET /gallery` — supports `page`, `perPage`, and `tags` (CSV) filtering; returns `Paginated<ArtworkItem>`.
   - `GET /fanarts` — `page`/`perPage` pagination; returns `Paginated<ArtworkItem>`.
   - `GET /commissions/prices`, `GET /patreon/tiers`, `GET /waitlist` — static mock payloads.
-- **`mockData.ts`** — Imports `artworks.generated.json` (currently `[]`), splits into `galleryMock` (`!a.username`) and `fanartsMock` (`a.username`). Also exports `pricesMock`, `patreonTiersMock`, `waitlistMock`.
+- **`mockData.ts`** — Imports `artworks.generated.json` (currently `[]`; falls back to inline `sampleGallery`/`sampleFanarts`, 5+3 SVG data-URI placeholders, when the manifest is empty), splits into `galleryMock` (`!a.username`) and `fanartsMock` (`a.username`). Also exports `pricesMock`, `patreonTiersMock`, `waitlistMock`.
 - **`queries.ts`** — `import './setupMock'` (side-effect; registers the mock adapter — see gating below) then exports typed fetchers: `fetchGallery`, `fetchFanarts`, `fetchPrices`, `fetchPatreonTiers`, `fetchWaitlist`.
 
 ### `useQuery` hook (`src/hooks/useQuery.ts`)
@@ -138,7 +138,7 @@ Two distinct sources:
 - For each image, `sharp` produces **thumb** (512w, q80) and **full** (1600w, q90) WebP variants.
 - Uploads both to R2 (`<slug>-thumb.webp` / `<slug>-full.webp`) with `Cache-Control: public, max-age=31536000, immutable`; idempotent (skips if both already exist via `HeadObjectCommand`).
 - Writes `src/api/artworks.generated.json` consumed by `mockData.ts`.
-- **Current state:** the committed manifest is `[]` (no artworks uploaded yet) — Gallery/Fanarts render empty states until the script is run.
+- **Current state:** the committed manifest is `[]` (no artworks uploaded yet) — Gallery/Fanarts show the inline sample seed under the `UnderConstruction` overlay until the script is run.
 
 ### Manifest entry shape
 ```json
