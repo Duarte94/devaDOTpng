@@ -8,17 +8,17 @@
 - **Routing:** `react-router-dom` v7 (`BrowserRouter`, SPA).
 - **Styling:** Tailwind CSS v4 (via `@tailwindcss/vite` 4.1.6, no separate config file — theme tokens live in `src/index.css`).
 - **Animation:** `framer-motion` 12 (`MotionConfig reducedMotion="user"`).
-- **Data layer:** `axios` 1.18 + `axios-mock-adapter` 2.1 (dev/mock mode only).
+- **Data layer:** `axios` 1.18 + `axios-mock-adapter` 2.1 (currently registered unconditionally, also in prod — see gating section).
 - **Image pipeline (build-time script):** `sharp` 0.35 + `@aws-sdk/client-s3` — uploads artwork to Cloudflare R2.
 - **Lint/typecheck:** `oxlint` + `tsc -b` (via `pnpm build`).
-- **Deploy target:** **Cloudflare Pages** (free plan) with Git integration — build command `pnpm lint && pnpm build`, output `dist`, build vars `PNPM_VERSION=9.15.9` + `NODE_VERSION=22`. Production data will be served by **Cloudflare Pages Functions** (`functions/api/*`). The legacy GitHub Pages workflow is pending removal — see `docs/PROJECT_STATUS.md` P2-6.
+- **Deploy:** **Cloudflare Workers** (static assets) via **Workers Builds** (Git integration) — live at `https://devadotpng.sasosmash.workers.dev`; build command `pnpm build`, deploy command `npx wrangler deploy`, build vars `PNPM_VERSION=9.15.9` + `NODE_VERSION=22`. Repo config in `wrangler.jsonc` (assets + SPA fallback) and `pnpm deploy` for manual deploys. Custom domain deferred — see `docs/PROJECT_STATUS.md` P2-6.
 
 ## Directory Layout
 
 ```
 devaDOTpng/
 ├── index.html                  # HTML shell; loads REM font (Google) + Font Awesome 6.5.2 (CDN)
-├── package.json                # Scripts: dev, build, lint, preview, upload-artworks
+├── package.json                # Scripts: dev, build, lint, preview, deploy, upload-artworks
 ├── vite.config.ts              # react + tailwind plugins; base '/'; '/api' dev proxy → :3000
 ├── .env                        # local overrides (gitignored): VITE_API_URL (VITE_USE_MOCKS is currently a no-op — see gating)
 ├── .env.example                # documented env template (committed)
@@ -27,14 +27,12 @@ devaDOTpng/
 ├── AGENTS.md / README.md / LICENSE
 ├── docs/
 │   ├── PROJECT_STRUCTURE.md    # this file
-│   ├── PROJECT_STATUS.md       # Diagnóstico, pendientes y roadmap (deploy a CF Pages)
+│   ├── PROJECT_STATUS.md       # Diagnóstico, pendientes y roadmap (deploy en CF Workers)
 │   └── upload-artworks.md      # Full guide to the R2 upload pipeline
 ├── scripts/
 │   └── upload-artworks.mjs     # Generates WebP variants, uploads to R2, writes manifest
-├── public/                     # (planificado) favicon, OG image, robots/sitemap, _routes.json
-├── functions/                  # (planificado) Cloudflare Pages Functions serving /api/*
-├── .github/workflows/
-│   └── static.yml              # Legacy GitHub Pages deploy — pending removal (see P2-6)
+├── public/                     # (planificado) favicon, OG image, robots/sitemap
+├── wrangler.jsonc              # Worker config: assets from ./dist + SPA fallback (+ future /api worker)
 └── src/
     ├── main.tsx                # React root mount + StrictMode
     ├── App.tsx                 # Router layout shell: Background / Navbar / Routes / Footer
@@ -98,7 +96,7 @@ Generic `useQuery<T>(queryFn, deps)` returning `{ data, loading, error }`. Cance
 ### Mock vs real backend gating
 
 - **Current reality:** the mock adapter registers **unconditionally** (`setupMock.ts:13`, statically imported from `queries.ts:1`), so both dev and production serve `/api/*` client-side from the committed manifest + static data. `VITE_USE_MOCKS` is a dead flag and the dev `/api` proxy in `vite.config.ts` (→ `localhost:3000`) is effectively unused.
-- **Decision pending (see `docs/PROJECT_STATUS.md` P0-1):** either keep this client-side fallback as the model (data updated per commit, no backend) or migrate to **Cloudflare Pages Functions** (`functions/api/*`, `public/_routes.json`) and re-gate the adapter to dev-only (`import.meta.env.DEV` + dynamic import).
+- **Decision pending (see `docs/PROJECT_STATUS.md` P0-1):** either keep this client-side fallback as the model (data updated per commit, no backend) or add a **Worker API** (`src/worker.ts` + `assets.run_worker_first: ["/api/*"]`) and re-gate the adapter to dev-only (`import.meta.env.DEV` + dynamic import).
 - **Prod (target of the migration):** `VITE_API_URL` stays `/api` (same origin); no build var needed.
 
 ## Components
@@ -160,13 +158,13 @@ Two distinct sources:
 - **Fonts:** REM loaded from Google Fonts (`index.html`); **Font Awesome 6.5.2** from cdnjs (`index.html`).
 - **Theme:** Dark-only (black background) — no light/dark/system toggle.
 
-## Deploy (Cloudflare Pages — target)
+## Deploy (Cloudflare Workers — live)
 
-- **Git integration**: build command `pnpm lint && pnpm build`, output directory `dist`, build vars `PNPM_VERSION=9.15.9` and `NODE_VERSION=22` (the v3 build image does not detect pnpm from the lockfile or `packageManager`).
-- **SPA routing**: do not create `404.html`; when no top-level `404.html` exists, Pages serves `index.html` for unmatched routes (SPA behavior).
-- **Functions**: `functions/api/*` serve `/api/*` (file-based routing) with `public/_routes.json` (`include: ["/api/*"]`) so static requests stay free/unlimited; free tier is 100k Function requests/day. The runtime "Fail open" setting keeps static assets served if the quota is exhausted.
-- **Custom domain**: attached from the Pages dashboard (no repo `CNAME` file); `vite.config.ts` sets `base: '/'`, correct for an apex/custom domain.
-- **Legacy**: `.github/workflows/static.yml` (GitHub Pages deploy, including `cp dist/index.html dist/404.html`) is pending removal or repurposing as PR-only CI — checklist in `docs/PROJECT_STATUS.md` P2-6.
+- **Hosting**: static-assets Worker `devadotpng`, deployed by **Workers Builds** (Git integration) — push to `main` → production (`https://devadotpng.sasosmash.workers.dev`), branches/PRs → preview builds. Build vars: `PNPM_VERSION=9.15.9`, `NODE_VERSION=22` (the build image does not detect them from the repo).
+- **Repo config**: `wrangler.jsonc` — `assets.directory: ./dist` + `not_found_handling: "single-page-application"` (SPA fallback for `BrowserRouter`; never add a `404.html`). Manual deploy: `pnpm deploy` (build + `wrangler deploy`); `pnpm-lock.yaml` committed for reproducible builds.
+- **Future `/api`** (if P0-1 option B): `src/worker.ts` + `assets.run_worker_first: ["/api/*"]`; static requests never invoke the Worker (free/unlimited), `/api/*` gets 100k requests/day on the free plan. KV available for a dynamic waitlist.
+- **Custom domain**: deferred; attach from the Worker dashboard as a Custom Domain (no repo `CNAME` file). `vite.config.ts` sets `base: '/'`, correct for an apex/custom domain. Update `og:url`/`canonical` when it changes.
+- **Legacy**: `.github/workflows/static.yml` (GitHub Pages deploy) was deleted; disable GitHub Pages in the repo settings if still enabled (see `docs/PROJECT_STATUS.md` P2-6).
 
 ## Env / Secrets
 

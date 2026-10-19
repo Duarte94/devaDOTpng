@@ -1,10 +1,10 @@
 # Estado del proyecto y pendientes
 
 > Documento de diagnóstico y roadmap — devaDOTpng (portfolio de **Deva.png**).
-> Base de referencia: commit `a0725ca` (origin/main, 2026-10-19).
-> Verificación actual: `tsc --noEmit` limpio · `oxlint` 0 warnings · build de producción funcional con datos client-side (mocks siempre activos — ver P0-1).
+> Base de referencia: commit `a0725ca` + deploy en Cloudflare Workers (2026-10-19).
+> Verificación actual: `tsc --noEmit`/`oxlint`/build limpios · deploy live en Workers Builds (`https://devadotpng.sasosmash.workers.dev`) sirviendo datos client-side (mocks siempre activos — ver P0-1).
 >
-> **Deploy objetivo: Cloudflare Pages (plan free) con Git integration**, dominio propio por definir (placeholder `<dominio>` en este doc). La migración desde GitHub Pages está pendiente (ver P2-6).
+> **Deploy actual: Cloudflare Workers (static assets) vía Workers Builds (Git integration)** — `https://devadotpng.sasosmash.workers.dev`. Dominio propio diferido (se usa el subdominio `workers.dev` por ahora). Detalles y pendientes en P2-6.
 
 ---
 
@@ -14,7 +14,7 @@ El frontend está **terminado en cuanto a estructura**: SPA con React 19 + Vite 
 
 Lo que falta es de otra naturaleza:
 
-1. **La estrategia de datos de producción quedó implícita.** Tras los últimos commits los mocks se registran siempre (`setupMock.ts:13`), así que el sitio funciona sin backend pero con datos congelados al commit y `VITE_USE_MOCKS` sin efecto. Falta decidir si ese modelo (fallback client-side) es el definitivo o si se migra a Pages Functions (P0-1).
+1. **La estrategia de datos de producción quedó implícita.** El sitio ya está deployado y funciona sin backend: los mocks se registran siempre (`setupMock.ts:13`), con datos congelados al commit y `VITE_USE_MOCKS` sin efecto. Falta decidir si ese modelo (fallback client-side) es el definitivo o si se agrega una API `/api` en el Worker (P0-1).
 2. **No hay contenido real**: `src/api/artworks.generated.json` está vacío (`[]`).
 3. **Quedan placeholders visibles** en CTAs principales ("MAKE YOUR REQUEST" → `/`, Trello genérico, Patreon genérico, botones sociales muertos).
 4. **Deuda de pulido**: sin favicon/OG image, años desactualizados, typos en el ToS, un bug de accesibilidad en `CommissionCard`, assets muertos de ~3 MB y ausencia total de tests.
@@ -33,23 +33,23 @@ Lo que falta es de otra naturaleza:
 - **Terms**: contenido estructurado en `content/tos.tsx`, reusable por modal y página.
 - **Capa de datos mock**: axios + `axios-mock-adapter` con paginación y filtrado server-like, registrado **incondicionalmente** (`src/api/setupMock.ts:13`) — funciona como fallback estático también en producción.
 - **Pipeline de imágenes**: `scripts/upload-artworks.mjs` (sharp → WebP thumb/full → R2 → manifest), documentado en `docs/upload-artworks.md`.
-- **CI actual**: GitHub Actions corre lint + build y deploya a GitHub Pages (`.github/workflows/static.yml`, con el fallback `404.html` específico de GH Pages) — **a migrar a Cloudflare Pages** (P2-6). Su `VITE_USE_MOCKS='false'` quedó sin efecto tras el cambio en `setupMock.ts`.
+- **Deploy actual**: Cloudflare Workers (static assets) con **Workers Builds** (Git integration): cada push a `main` deploya a `https://devadotpng.sasosmash.workers.dev` (branches/PRs generan previews). Config en `wrangler.jsonc` (`assets.directory: ./dist` + SPA fallback) y deploy manual vía `pnpm deploy`. El workflow legacy de GitHub Pages (`.github/workflows/static.yml`) fue eliminado (P2-6).
 - **Accesibilidad base**: `useFocusTrap`, cierre con Escape en modales/drawer, `aria-modal`, `aria-pressed` en filtros, `focus-visible` cyan global, `MotionConfig reducedMotion="user"`.
 
 ---
 
 ## 3. Pendientes P0 — Bloqueantes
 
-### P0-1 · Estrategia de datos de producción (fallback client-side vs. Pages Functions)
+### P0-1 · Estrategia de datos de producción (fallback client-side vs. API en el Worker)
 
-**Estado actual (importante):** tras los últimos commits, `setupMock.ts:13` crea el `MockAdapter` **sin condicional** y `queries.ts:1` lo importa estáticamente. Resultado: en dev **y en producción** todos los `/api/*` se responden client-side con el manifest committed. Es decir, la opción "fallback estático" ya está implementada de facto: el sitio deployado funciona sin backend, pero con datos congelados al último commit, `axios-mock-adapter` en el bundle de prod, y el flag `VITE_USE_MOCKS` sin efecto (el `VITE_USE_MOCKS='false'` de `.github/workflows/static.yml:43` no hace nada). Si se agregaran Pages Functions sin re-gatear el adapter, nunca se llamarían.
+**Estado actual (importante):** `setupMock.ts:13` crea el `MockAdapter` **sin condicional** y `queries.ts:1` lo importa estáticamente. Resultado: en dev **y en el Worker deployado** todos los `/api/*` se responden client-side con el manifest committed. Es decir, la opción "fallback estático" ya está implementada de facto: el sitio funciona sin backend, pero con datos congelados al último commit, `axios-mock-adapter` en el bundle de prod, y el flag `VITE_USE_MOCKS` sin efecto (el `VITE_USE_MOCKS='false'` del workflow legacy de GH Pages era decorativo; ese workflow ya se eliminó, ver P2-6). Si se agregara una API `/api` en el Worker sin re-gatear el adapter, nunca se llamaría.
 
-**Decisión pendiente:** ¿se deja el fallback client-side como modelo definitivo, o se migra a Pages Functions?
+**Decisión pendiente:** ¿se deja el fallback client-side como modelo definitivo, o se agrega una API `/api` en el Worker?
 
 | Opción | Cómo | Pros | Contras |
 |---|---|---|---|
 | **A. Dejar como está (fallback estático client-side)** | Cero cambios de código: `setupMock.ts` siempre activo + manifest committed. | Ya funciona en cualquier deploy; precios/tiers/waitlist editables por commit; sin infra; coherente con un portfolio estático. | `axios-mock-adapter` (~KB) en el bundle de prod; sin API real (no habilita waitlist dinámica ni lógica server-side); el proxy `/api` de `vite.config.ts` nunca se usa. |
-| **B. Cloudflare Pages Functions** | Crear `functions/api/*` (file-based routing) que sirvan el manifest + datos estáticos compartidos; **re-gatear** `setupMock.ts` a solo-dev (`import.meta.env.DEV`, import dinámico). `public/_routes.json` con `include: ["/api/*"]`. | `/api` real en el free plan (100k req/día); estáticos siguen ilimitados; habilita KV (waitlist dinámica, 1k writes/día) y cualquier lógica server-side futura. | Requiere mover datos/helpers a módulos compartidos, re-gatear el adapter y validar con `wrangler pages dev` o previews. |
+| **B. API `/api` en el Worker** | Agregar `src/worker.ts` (módulo fetch) al Worker actual + `assets.run_worker_first: ["/api/*"]` en `wrangler.jsonc`; el resto sigue siendo assets estáticos. Sirve el manifest + datos compartidos; **re-gatear** `setupMock.ts` a solo-dev (`import.meta.env.DEV`, import dinámico). | `/api` real en el free plan (100k req/día); assets siguen ilimitados/gratis; habilita KV (waitlist dinámica, 1k writes/día) y lógica server-side futura. | Requiere mover datos/helpers a módulos compartidos, re-gatear el adapter y validar con `wrangler dev` o previews. |
 | **C. Backend externo real** | Implementar API propia con base de datos fuera de CF. | Máxima flexibilidad (requests, waitlist dinámica, panel admin). | Fuera de alcance: no hay requisitos de usuarios/autenticación ni presupuesto de mantenimiento. Innecesario si B alcanza. |
 
 **Recomendación:** si la waitlist va a seguir editándose por commit, **A es suficiente y ya está hecha** (solo restaría limpiar el flag muerto `VITE_USE_MOCKS` y documentar el modelo). Migrar a **B** cuando haga falta editar la waitlist sin redeploy o exponer endpoints reales; el cliente no cambia (mismo contrato REST).
@@ -57,31 +57,24 @@ Lo que falta es de otra naturaleza:
 **Esbozo de B (cuando se decida):**
 
 ```txt
-functions/
-└── api/
-    ├── gallery.ts            # paginación + filtro por tags (lógica extraída de setupMock)
-    ├── fanarts.ts            # paginación
-    ├── waitlist.ts
-    ├── commission-status.ts  # opcional (ver P1-1)
-    ├── commissions/
-    │   ├── prices.ts
-    │   └── extras.ts
-    └── patreon/
-        └── tiers.ts
-public/
-└── _routes.json              # { "version": 1, "include": ["/api/*"] }
+src/
+└── worker.ts                 # Worker entry: atiende /api/* y delega el resto a los assets
+src/api/
+├── data/                     # JSON compartidos (prices, tiers, waitlist, extras) — los leen mocks y Worker
+└── paginate.ts               # helper de paginado/filtrado compartido
+wrangler.jsonc                # assets.directory=./dist + assets.run_worker_first=["/api/*"]
 ```
+(rutas internas del handler: `/api/gallery`, `/api/fanarts`, `/api/waitlist`, `/api/commissions/prices`, `/api/commissions/extras`, `/api/patreon/tiers`)
 
-1. **Datos compartidos**: mover `pricesMock`, `patreonTiersMock`, `waitlistMock`, `commissionExtrasMock` de `src/api/mockData.ts` a JSON (ej. `src/api/data/prices.json`, etc.). Los importan tanto los mocks de dev (cliente) como las Functions (wrangler los bundlea al deployar). Una sola fuente de verdad.
-2. **Helpers compartidos**: extraer el paginado/filtrado de `setupMock.ts:15-47` a un módulo `src/api/paginate.ts` reutilizado por las Functions.
+1. **Datos compartidos**: mover `pricesMock`, `patreonTiersMock`, `waitlistMock`, `commissionExtrasMock` de `src/api/mockData.ts` a JSON (ej. `src/api/data/prices.json`, etc.). Los importan tanto los mocks de dev (cliente) como el Worker (wrangler los bundlea al deployar). Una sola fuente de verdad.
+2. **Helpers compartidos**: extraer el paginado/filtrado de `setupMock.ts:15-47` a un módulo `src/api/paginate.ts` reutilizado por el Worker.
 3. **Cliente**: `setupMock.ts` queda dev-only (`if (import.meta.env.DEV) { ... }`) con import dinámico desde `queries.ts`; `VITE_API_URL` sigue siendo `/api` (mismo origen).
-4. **`public/_routes.json`**: los requests estáticos quedan fuera de Functions (ilimitados); solo `/api/*` consume la cuota de 100k/día.
-5. **Runtime**: en Settings → Runtime, elegir **"Fail open"** para que los assets estáticos se sigan sirviendo si se agota la cuota diaria.
-6. **Local**: `pnpm build` → `npx wrangler pages dev dist` para probar las Functions; el día a día sigue con mocks.
+4. **`wrangler.jsonc`**: `assets.run_worker_first: ["/api/*"]` → solo `/api/*` ejecuta el Worker; el tráfico de assets no lo toca (ilimitado y gratis).
+5. **Local**: `pnpm build` → `corepack pnpm exec wrangler dev` para probar la API; el día a día sigue con mocks.
 
-- [ ] Decidir con la artista: A (dejar client-side) o B (Pages Functions).
+- [ ] Decidir con la artista: A (dejar client-side) o B (API en el Worker).
 - [ ] Si A: eliminar el flag `VITE_USE_MOCKS` (`.env.example`, `static.yml`, docs) y documentar el modelo "datos por commit" en README/`AGENTS.md`.
-- [ ] Si B: crear `functions/api/*`, re-gatear `setupMock.ts` a dev-only, agregar `public/_routes.json` y verificar en un preview deployment.
+- [ ] Si B: crear `src/worker.ts` + rutas `/api/*`, actualizar `wrangler.jsonc` (`run_worker_first`), re-gatear `setupMock.ts` a dev-only y verificar en un preview deployment.
 - [ ] Actualizar `docs/PROJECT_STRUCTURE.md` (sección "Mock vs real backend gating") y `AGENTS.md` con la decisión.
 
 ### P0-2 · Manifest de artworks vacío
@@ -101,12 +94,12 @@ public/
 
 ### P0-3 · Setup en dev y flag `VITE_USE_MOCKS` muerto
 
-**Estado:** el problema original (mocks inertes sin `.env`) quedó resuelto de facto al quitar el gate en `setupMock.ts:13`: `pnpm dev` funciona recién clonado el repo, sin `.env`. Efecto colateral: la variable `VITE_USE_MOCKS` ya no tiene efecto en ningún entorno (el `VITE_USE_MOCKS='false'` de `static.yml:43` es decorativo).
+**Estado:** el problema original (mocks inertes sin `.env`) quedó resuelto de facto al quitar el gate en `setupMock.ts:13`: `pnpm dev` funciona recién clonado el repo, sin `.env`. Efecto colateral: la variable `VITE_USE_MOCKS` ya no tiene efecto en ningún entorno (el `VITE_USE_MOCKS='false'` que quedaba en el workflow legacy de GH Pages era decorativo; ese workflow ya se eliminó).
 
 **Solución:** decidir el destino del flag según P0-1:
 
-- Si se vuelve a gatear el adapter (opción B de P0-1, Pages Functions): usar `import.meta.env.DEV` a secas (sin flag) para evitar la ambigüedad.
-- Si se deja el fallback siempre-activo (opción A): eliminar `VITE_USE_MOCKS` de `.env.example`, del workflow y de los docs.
+- Si se vuelve a gatear el adapter (opción B de P0-1, API en el Worker): usar `import.meta.env.DEV` a secas (sin flag) para evitar la ambigüedad.
+- Si se deja el fallback siempre-activo (opción A): eliminar `VITE_USE_MOCKS` de `.env.example` y de los docs.
 
 Además: agregar al `README.md` la sección de setup (`pnpm install` → `pnpm dev`) y linkear `docs/PROJECT_STATUS.md`.
 
@@ -151,7 +144,7 @@ y consumirlo desde `Navbar`, `Footer`, `Home`, `Commissions`, `Nsfw`. Los botone
 
 **Solución progresiva:**
 1. Mover el status a datos: agregar `status: 'open' | 'closed' | 'waitlist'` a `WaitlistResponse` (o endpoint `/commission-status`) y renderizar según eso.
-2. Con Pages Functions (P0-1), exponerlo en `functions/api/waitlist.ts` para cerrar comisiones con un commit (o fila en KV).
+2. Con la API del Worker (P0-1 opción B), exponerlo en `/api/waitlist` para cerrar comisiones con un commit (o fila en KV).
 3. **Waitlist dinámica (opcional)**: Workers KV en el free plan (100k reads y 1.000 writes por día) permite editar las entries sin redeploy (desde el dashboard o una Function admin protegida por token). Migrar solo si la artista lo necesita.
 
 - [ ] Agregar `status` a la respuesta y condicionar CTA en Home (si está cerrado, el botón "Request now" debería deshabilitarse o cambiar a "Join waitlist").
@@ -160,14 +153,14 @@ y consumirlo desde `Navbar`, `Footer`, `Home`, `Commissions`, `Nsfw`. Los botone
 ### P1-2 · SEO / social / favicon
 
 - No existe `public/` → **sin favicon** (la pestaña muestra el ícono por defecto) ni `apple-touch-icon`.
-- `index.html:8-12`: falta `og:image` (los links compartidos en Discord/Twitter no muestran preview), `og:url` apunta a `https://deva.png` (dominio incorrecto), falta `<link rel="canonical">`, `theme-color`, `twitter:image`.
+- `index.html:8-12`: falta `og:image` (los links compartidos en Discord/Twitter no muestran preview), faltan `theme-color` y `twitter:image`. `og:url` y `<link rel="canonical">` ya apuntan a `https://devadotpng.sasosmash.workers.dev` (provisional — actualizar al configurar el dominio propio).
 - `title`/descripción dicen "DevaDOTpng", mientras la marca es "Deva.png".
 - Sin `robots.txt` ni `sitemap.xml`.
 
 **Solución:**
 
 1. Crear `public/` con: `favicon.svg` (logo `devasign.svg` adaptado a 32×32), `apple-touch-icon.png` (180×180), `og-image.png` (1200×630, arte + nombre), `site.webmanifest`.
-2. Completar `index.html` (reemplazar `<dominio>` por el dominio propio):
+2. Completar `index.html` (con el dominio propio, cuando exista; mientras tanto vale `https://devadotpng.sasosmash.workers.dev`, ya aplicado en `og:url`/`canonical`):
 
 ```html
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -182,7 +175,7 @@ y consumirlo desde `Navbar`, `Footer`, `Home`, `Commissions`, `Nsfw`. Los botone
 ```
 
 3. `public/robots.txt` + `public/sitemap.xml` con las 6 rutas estáticas (URLs sobre `<dominio>`).
-4. Configurar el dominio propio en Cloudflare Pages (P2-6) y ajustar `CDN_BASE_URL` de R2 para que sea subdominio del mismo dominio (ej. `https://cdn.<dominio>`) — así los manifests futuros quedan consistentes.
+4. Configurar el dominio propio en el Worker (Custom Domain, P2-6) y ajustar `CDN_BASE_URL` de R2 para que sea subdominio del mismo dominio (ej. `https://cdn.<dominio>`) — así los manifests futuros quedan consistentes.
 
 - [ ] Definir dominio definitivo y reemplazar `<dominio>`.
 - [ ] Crear `public/` (favicon, apple-touch, OG, manifest, robots, sitemap) y actualizar `index.html`.
@@ -253,7 +246,7 @@ const panelId = `commission-toggle-${slug}`
 
 ### P2-2 · `axios-mock-adapter` en dependencies y activo en prod
 
-- Está en `dependencies` (`package.json:16`), se importa estáticamente vía `queries.ts:1` y **hoy se registra siempre** (`setupMock.ts:13`), así que corre en producción. Si se elige la opción B de P0-1 (Pages Functions), debe pasar a **solo-dev** con import dinámico:
+- Está en `dependencies` (`package.json:16`), se importa estáticamente vía `queries.ts:1` y **hoy se registra siempre** (`setupMock.ts:13`), así que corre en producción. Si se elige la opción B de P0-1 (API en el Worker), debe pasar a **solo-dev** con import dinámico:
 
 ```ts
 // src/api/queries.ts — solo en dev, code-splitteado por Vite
@@ -269,13 +262,14 @@ if (import.meta.env.DEV) {
 
 ### P2-3 · Higiene de dependencias
 
-- **`pnpm-lock.yaml` fue eliminado del repo** (commit `26d8cdc`, junto con cambios de Navbar — probablemente accidental). Sin lockfile los installs no son reproducibles y `pnpm install --frozen-lockfile` (workflow viejo) falla. Regenerar con `pnpm install` y commitearlo; si la eliminación fue intencional (cambio de package manager), actualizar `packageManager` en `package.json` y esta sección.
-- `package-lock.json` sin trackear en la raíz (residuo de `npm install`): el proyecto declara pnpm (`packageManager: pnpm@9.15.9` en `package.json:6`). Borrarlo y/o agregarlo a `.gitignore`.
-- En esta máquina no hay `pnpm` en el PATH ni `npx` habilitado (execution policy): para verificación local usar `& node_modules\.bin\oxlint.cmd` y `node node_modules\typescript\bin\tsc --noEmit -p tsconfig.app.json`.
-- Declarar `engines` en `package.json` (Node 22, pnpm 9) para consistencia con el build de Cloudflare Pages y el pipeline R2.
+- ✅ **`pnpm-lock.yaml` regenerado y commiteado** (2026-10-19, junto con `wrangler`). El commit `26d8cdc` lo había eliminado por accidente. Clave para **Workers Builds**: sin lockfile los builds vía Git integration no son reproducibles.
+- ✅ `package-lock.json` eliminado y agregado a `.gitignore` (era residuo de `npm install`; el proyecto usa pnpm, `packageManager: pnpm@9.15.9`).
+- En esta máquina no hay `pnpm` en el PATH (pero **corepack 0.35** sí): usar `corepack pnpm <cmd>`; alternativa directa: `& node_modules\.bin\oxlint.cmd` y `node node_modules\typescript\bin\tsc --noEmit -p tsconfig.app.json`. `npx` sigue bloqueado por execution policy (usar `corepack pnpm exec` en su lugar).
+- Declarar `engines` en `package.json` (Node 22, pnpm 9) para consistencia con Workers Builds y el pipeline R2.
 
-- [ ] Regenerar y commitear `pnpm-lock.yaml`.
-- [ ] Eliminar `package-lock.json`, considerar `.gitignore`, declarar `engines`.
+- [x] Regenerar y commitear `pnpm-lock.yaml`.
+- [x] Eliminar `package-lock.json` + agregarlo a `.gitignore`.
+- [ ] Declarar `engines` en `package.json` (Node 22+, pnpm 9, alineado con Workers Builds).
 
 ### P2-4 · Sin tests
 
@@ -283,7 +277,7 @@ No hay ningún test ni framework configurado; el CI solo corre lint + build. Mí
 
 - **Vitest + Testing Library** para: `useQuery` (loading/error/cancel), `FilterBar` (toggle/`aria-pressed`), `Pagination` (límites), `Button` (variantes `to`/`href`/`disabled`), helper `slug` del P1-3, y las Functions de P0-1 (input/output del contrato REST).
 - **Playwright** smoke E2E: cada ruta renderiza sin crash, filtro de galería reduce resultados, click en tile abre lightbox y Escape lo cierra, el gate de ToS deshabilita el CTA hasta aceptar.
-- Integrar `pnpm test` / `pnpm test:e2e` en el pipeline (GitHub Actions como CI de PRs, aunque el deploy lo haga Cloudflare Pages).
+- Integrar `pnpm test` / `pnpm test:e2e` en el pipeline (GitHub Actions como CI de PRs, además de los preview builds de Workers Builds).
 
 - [ ] Setup Vitest + primeros tests unitarios.
 - [ ] Smoke E2E + integración en CI.
@@ -294,31 +288,28 @@ No hay ningún test ni framework configurado; el CI solo corre lint + build. Mí
 
 - [ ] (Opcional) Self-host de fuentes + subset de iconos.
 
-### P2-6 · Migración de GitHub Pages a Cloudflare Pages
+### P2-6 · Deploy en Cloudflare Workers (Workers Builds)
 
-**Situación:** el repo todavía tiene `.github/workflows/static.yml`, que buildea y deploya a GitHub Pages (incluye un paso `cp dist/index.html dist/404.html` específico de GH Pages). El target decidido es **Cloudflare Pages free con Git integration**.
+**Estado: deployado y funcionando** en `https://devadotpng.sasosmash.workers.dev` (Worker `devadotpng`, static assets). Hecho:
 
-**Checklist de migración:**
+- Proyecto Worker creado con **Git integration (Workers Builds)**: push a `main` → deploy de producción; branches/PRs → previews.
+- Config reproducible en el repo: `wrangler.jsonc` (`assets.directory: ./dist`, `not_found_handling: "single-page-application"`) + script `pnpm deploy` para deploy manual.
+- SPA routing verificado: `/`, `/gallery`, `/fanarts` y rutas inexistentes devuelven `index.html` 200 (correcto: no existe `404.html`).
+- `pnpm-lock.yaml` regenerado/commiteado (P2-3) y workflow legacy de GH Pages (`.github/workflows/static.yml`) eliminado.
+- `og:url`/`canonical` apuntan a la URL del Worker (provisional).
 
-1. **Desconectar/limpiar GitHub Pages**: eliminar `.github/workflows/static.yml` (o reducirlo a lint + build + tests como CI de PRs, sin deploy). Si se elimina, el lint pasa al build command de Pages.
-2. **Crear el proyecto en Cloudflare Pages → "Connect to Git"** apuntando a este repo:
-   - Build command: `pnpm lint && pnpm build` (o solo `pnpm build` si se conserva CI en GH).
-   - Build output directory: `dist`.
-   - Build variables (la build image v3 **no** detecta la versión de pnpm desde `pnpm-lock.yaml` ni desde `packageManager`; además hoy no hay lockfile — ver P2-3):
-     - `PNPM_VERSION=9.15.9`
-     - `NODE_VERSION=22`
-   - `VITE_USE_MOCKS` ya no tiene efecto (P0-1/P0-3): eliminarlo del proyecto o re-gatear los mocks a dev-only si se eligen Pages Functions.
-3. **SPA routing**: **no** crear `404.html`. En Cloudflare Pages, si no existe un `404.html` de nivel superior, el comportamiento por defecto es SPA: sirve `/index.html` para cualquier ruta sin asset, que es lo que necesita `BrowserRouter`. (El paso `cp` del workflow viejo queda obsoleto y no debe replicarse.)
-4. **Functions** (P0-1): `functions/api/*` + `public/_routes.json` con `include: ["/api/*"]` → los estáticos no invocan Functions (ilimitados) y solo `/api/*` consume las 100k requests/día del free plan. En Settings → Runtime, elegir **"Fail open"**.
-5. **Dominio propio**: agregarlo desde el dashboard de Pages (Custom domains). No se usa archivo `CNAME` en el repo (eso era de GH Pages). Confirmar que los DNS del dominio estén en Cloudflare (ya lo están para R2/CDN). `base: '/'` de `vite.config.ts:7` es correcto para dominio propio (no aplica el caso `usuario.github.io/repo`).
-6. **Previews**: cada branch/PR genera un preview deployment automático (útil para validar Functions y cambios de UI antes de mergear a `main`).
-7. **Redirects**: `_redirects` no aplica a rutas servidas por Functions; con el SPA default de Pages no se necesita archivo `_redirects` para el fallback.
-8. **Docs**: actualizar `docs/PROJECT_STRUCTURE.md`, `AGENTS.md` y `README.md` cuando la migración esté hecha (mientras tanto, este doc es la referencia).
+**Pendientes:**
 
-- [ ] Crear proyecto en Cloudflare Pages con Git integration (build vars `PNPM_VERSION`/`NODE_VERSION`).
-- [ ] Eliminar o reconvertir `.github/workflows/static.yml`.
-- [ ] Configurar dominio propio en el dashboard.
-- [ ] Validar en preview: rutas SPA directas (deep links), `/api/*` con Functions, y el build sin `VITE_USE_MOCKS`.
+1. **Build settings en el dashboard de Workers Builds** (Settings → Build): build command `pnpm build`, deploy command `npx wrangler deploy`, build vars `PNPM_VERSION=9.15.9` y `NODE_VERSION=22` (la build image no los detecta del repo). Verificar que el build de `main` corra con el lockfile nuevo.
+2. **Dominio propio** (diferido): Custom Domain del Worker desde el dashboard. Al configurarlo, actualizar `og:url`/`canonical` (`index.html`) y, cuando existan, sitemap/robots (P1-2). `base: '/'` de `vite.config.ts:7` es correcto.
+3. **GitHub Pages**: deshabilitarlo en Settings del repo si sigue activo (el workflow ya no existe; no debe quedar nada publicando ahí).
+4. **API `/api` en el Worker** (si se elige P0-1 opción B): `src/worker.ts` + `assets.run_worker_first: ["/api/*"]` en `wrangler.jsonc`; KV para waitlist dinámica si hace falta.
+5. **Observabilidad** (opcional): Workers Analytics (gratis) para requests/errores; notificaciones de build fallido.
+
+- [x] Proyecto con Git integration + SPA verificado + `wrangler.jsonc` + lockfile.
+- [ ] Verificar/cargar build vars (`PNPM_VERSION`, `NODE_VERSION`) en el dashboard.
+- [ ] Deshabilitar GitHub Pages en el repo (si sigue activo).
+- [ ] Configurar dominio propio cuando se decida.
 
 ### P2-7 · Otras observaciones menores
 
@@ -333,14 +324,14 @@ No hay ningún test ni framework configurado; el CI solo corre lint + build. Mí
 
 ## 6. Roadmap sugerido
 
-### Iteración 1 — Deploy real en Cloudflare Pages (1–2 sesiones)
-1. P0-1: decidir A/B. Si B, implementar Pages Functions (`functions/api/*` + datos/helpers compartidos + `public/_routes.json`); si A, documentar el modelo client-side.
-2. P2-6: crear el proyecto de CF Pages (Git integration), build vars `PNPM_VERSION=9.15.9` / `NODE_VERSION=22`, retirar el workflow de GH Pages y configurar dominio.
+### Iteración 1 — Deploy endurecido en Cloudflare Workers (1 sesión)
+1. P0-1: decidir A/B. Si B, implementar la API en el Worker (`src/worker.ts` + datos/helpers compartidos + `run_worker_first`); si A, documentar el modelo client-side.
+2. P2-6: verificar build vars (`PNPM_VERSION=9.15.9` / `NODE_VERSION=22`) en Workers Builds y deshabilitar GH Pages (el deploy y el SPA ya están funcionando).
 3. P0-3: limpiar el flag `VITE_USE_MOCKS` según la decisión + setup en README.
 4. P0-4: crear `constants/links.ts` (puede quedar con URLs pendientes marcadas) y arreglar el Patreon genérico de Home.
 5. P0-2 (mitigación): seed de demo si aún no hay artwork.
 
-**Criterio de salida:** el sitio en `<dominio>` (o `pages.dev` provisional) muestra galería, precios, tiers y waitlist sin errores, con deep links funcionando.
+**Criterio de salida:** el sitio en `https://devadotpng.sasosmash.workers.dev` (o dominio propio, si se configura) muestra galería, precios, tiers y waitlist sin errores, con deep links funcionando.
 
 ### Iteración 2 — Contenido y cara pública (1–2 sesiones)
 1. P0-2: subir artworks reales a R2 y commitear el manifest.
@@ -367,9 +358,10 @@ No hay ningún test ni framework configurado; el CI solo corre lint + build. Mí
 | Typecheck | `node node_modules\typescript\bin\tsc --noEmit -p tsconfig.app.json` (o `pnpm build`) |
 | Lint | `pnpm lint` (o `& node_modules\.bin\oxlint.cmd`) |
 | Preview build | `pnpm build; pnpm preview` |
-| Probar Functions localmente | `pnpm build` y luego `npx wrangler pages dev dist` |
+| Probar el Worker localmente | `pnpm build` y luego `corepack pnpm exec wrangler dev` |
+| Deploy manual | `pnpm deploy` (build + `wrangler deploy`; requiere `wrangler login`) |
 | Subir artwork | `pnpm upload-artworks` (ver `docs/upload-artworks.md`) |
 
 > Notas:
-> - En Cloudflare Pages, pinear `PNPM_VERSION=9.15.9` y `NODE_VERSION=22` como build variables (la build image v3 no los detecta del repo).
-> - En esta máquina Windows: `pnpm` no está en el PATH del shell activo y `npx` está bloqueado por execution policy; usar las variantes con `node_modules` o instalar/activar pnpm.
+> - En Workers Builds (dashboard → Settings), pinear `PNPM_VERSION=9.15.9` y `NODE_VERSION=22` como build variables (la build image no los detecta del repo).
+> - En esta máquina Windows: `pnpm` no está en el PATH, pero corepack sí → usar `corepack pnpm <cmd>`; `npx` está bloqueado por execution policy (usar `corepack pnpm exec`).

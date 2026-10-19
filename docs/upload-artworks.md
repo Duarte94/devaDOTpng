@@ -137,7 +137,7 @@ Wrote 3 entries → src/api/artworks.generated.json
 
    Browse the gallery and fanarts pages. Grid thumbnails load the `thumb-*` WebP; clicking a work opens the `full-*` variant.
 
-3. **Push to main** — GitHub Actions builds and deploys to Pages automatically.
+3. **Push to main** — Cloudflare Workers Builds redeploys the site automatically (see `docs/PROJECT_STATUS.md` P2-6). Preview builds run on branches/PRs.
 
 ## Naming conventions
 

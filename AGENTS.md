@@ -36,10 +36,10 @@ React 19 + TypeScript + Vite + Tailwind CSS v4. react-router-dom v7 for SPA navi
 
 ## CI / Deploy
 
-- **Deploy target: Cloudflare Pages (free plan) with Git integration** — build command `pnpm lint && pnpm build`, output `dist`, build vars `PNPM_VERSION=9.15.9` and `NODE_VERSION=22` (the v3 build image does not detect pnpm from the lockfile or `packageManager`).
-- SPA routing: do **not** create `404.html` — Pages serves `index.html` for unmatched routes when no `404.html` exists (the old `cp dist/index.html dist/404.html` step is GitHub Pages-only).
-- Data in production: the mock layer (`axios-mock-adapter` in `src/api/setupMock.ts`) currently registers **unconditionally**, so `/api/*` is served client-side from the committed manifest in both dev and prod (old `VITE_USE_MOCKS` gate removed; the flag is now a no-op). **Pending decision** — see `docs/PROJECT_STATUS.md` P0-1: keep that fallback or migrate to Cloudflare Pages Functions under `functions/api/*` (`public/_routes.json` keeps static asset requests free/unlimited).
-- `.github/workflows/static.yml` (GitHub Pages deploy) is **pending removal** — see `docs/PROJECT_STATUS.md` P2-6 for the full migration checklist.
+- **Deploy: Cloudflare Workers (static assets) via Workers Builds (Git integration)** — Worker `devadotpng`, live at `https://devadotpng.sasosmash.workers.dev` (custom domain deferred). Push to `main` → production deploy; branches/PRs → preview builds. Build command `pnpm build`, deploy command `npx wrangler deploy`, build vars `PNPM_VERSION=9.15.9` and `NODE_VERSION=22` (the build image does not detect pnpm from the lockfile or `packageManager`).
+- Repo config lives in `wrangler.jsonc` (`assets.directory: ./dist`, `not_found_handling: "single-page-application"` — SPA routing for `BrowserRouter`; never add a `404.html`). Manual deploy: `pnpm deploy`. `pnpm-lock.yaml` is committed for reproducible builds.
+- Data in production: the mock layer (`axios-mock-adapter` in `src/api/setupMock.ts`) currently registers **unconditionally**, so `/api/*` is served client-side from the committed manifest in both dev and prod (old `VITE_USE_MOCKS` gate removed; the flag is now a no-op). **Pending decision** — see `docs/PROJECT_STATUS.md` P0-1: keep that fallback or add a Worker API (`src/worker.ts` + `assets.run_worker_first: ["/api/*"]`).
+- The legacy `.github/workflows/static.yml` (GitHub Pages deploy) was deleted; disable GitHub Pages in the repo settings if still enabled.
 
 ## Image Hosting
 
@@ -57,7 +57,7 @@ High-resolution artwork is hosted on **Cloudflare R2** (S3-compatible, free egre
    - The script generates **thumb** (512w WebP) and **full** (1600w WebP) variants via `sharp`.
    - Skips files already on R2 (idempotent).
    - Writes the artwork manifest to `src/api/artworks.generated.json`.
-5. Commit the updated `artworks.generated.json` (it's checked in — served by the mock layer in dev/prod, and by Pages Functions if the optional migration happens).
+5. Commit the updated `artworks.generated.json` (it's checked in — served by the mock layer in dev/prod, and by the Worker API if that optional migration happens).
 6. Browse the gallery to verify.
 
 ## Style notes
