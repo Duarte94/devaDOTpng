@@ -44,7 +44,6 @@ Copy `.env.example` to `.env` and fill in the values:
 ```bash
 # API
 VITE_API_URL=/api
-VITE_USE_MOCKS=true
 
 # R2 credentials (for upload script only — never exposed to the browser)
 R2_ACCOUNT_ID=<your-cloudflare-account-id>

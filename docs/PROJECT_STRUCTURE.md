@@ -11,7 +11,7 @@
 - **Data layer:** `axios` 1.18 + `axios-mock-adapter` 2.1 (dev/mock mode only).
 - **Image pipeline (build-time script):** `sharp` 0.35 + `@aws-sdk/client-s3` — uploads artwork to Cloudflare R2.
 - **Lint/typecheck:** `oxlint` + `tsc -b` (via `pnpm build`).
-- **Deploy:** Static build → GitHub Pages via GitHub Actions on push to `main`.
+- **Deploy target:** **Cloudflare Pages** (free plan) with Git integration — build command `pnpm lint && pnpm build`, output `dist`, build vars `PNPM_VERSION=9.15.9` + `NODE_VERSION=22`. Production data will be served by **Cloudflare Pages Functions** (`functions/api/*`). The legacy GitHub Pages workflow is pending removal — see `docs/PROJECT_STATUS.md` P2-6.
 
 ## Directory Layout
 
@@ -20,18 +20,21 @@ devaDOTpng/
 ├── index.html                  # HTML shell; loads REM font (Google) + Font Awesome 6.5.2 (CDN)
 ├── package.json                # Scripts: dev, build, lint, preview, upload-artworks
 ├── vite.config.ts              # react + tailwind plugins; base '/'; '/api' dev proxy → :3000
-├── .env                        # local overrides (gitignored): VITE_API_URL, VITE_USE_MOCKS=true
+├── .env                        # local overrides (gitignored): VITE_API_URL (VITE_USE_MOCKS is currently a no-op — see gating)
 ├── .env.example                # documented env template (committed)
 ├── .gitignore                  # ignores .env*, artworks-src/, node_modules, dist, scripts/.cache
 ├── tsconfig.json / tsconfig.app.json / tsconfig.node.json
 ├── AGENTS.md / README.md / LICENSE
 ├── docs/
 │   ├── PROJECT_STRUCTURE.md    # this file
+│   ├── PROJECT_STATUS.md       # Diagnóstico, pendientes y roadmap (deploy a CF Pages)
 │   └── upload-artworks.md      # Full guide to the R2 upload pipeline
 ├── scripts/
 │   └── upload-artworks.mjs     # Generates WebP variants, uploads to R2, writes manifest
+├── public/                     # (planificado) favicon, OG image, robots/sitemap, _routes.json
+├── functions/                  # (planificado) Cloudflare Pages Functions serving /api/*
 ├── .github/workflows/
-│   └── static.yml              # Build + deploy to GitHub Pages (SPA fallback)
+│   └── static.yml              # Legacy GitHub Pages deploy — pending removal (see P2-6)
 └── src/
     ├── main.tsx                # React root mount + StrictMode
     ├── App.tsx                 # Router layout shell: Background / Navbar / Routes / Footer
@@ -39,13 +42,13 @@ devaDOTpng/
     ├── api/                    # Data layer (see Data Flow)
     │   ├── types.ts            # ArtworkItem, PriceTier, PriceCategory, PatreonTier, WaitlistResponse, Paginated<T>
     │   ├── client.ts           # Axios instance (baseURL from VITE_API_URL)
-    │   ├── setupMock.ts        # axios-mock-adapter registration (DEV + VITE_USE_MOCKS===true gate)
+    │   ├── setupMock.ts        # axios-mock-adapter registration (runs unconditionally, incl. prod)
     │   ├── mockData.ts         # Imports artworks.generated.json + static price/patreon/waitlist data
     │   ├── queries.ts          # Typed fetchers: fetchGallery, fetchFanarts, fetchPrices, etc.
     │   └── artworks.generated.json   # R2 manifest (committed; currently [])
     ├── assets/                 # Bundled site-chrome images (hero banners, logo, Ani-Elfa preview)
     ├── components/             # Navbar, Footer, Hero, Background, ToSModal, CommissionCard, PatreonCard
-    │   └── ui/                 # ArtworkGrid, Badge, Button, FilterBar, GlassCard, Lightbox, Pagination, SectionTitle
+    │   └── ui/                 # ArtworkGrid, Badge, Button, FilterBar, GlassCard, Lightbox, Pagination, SectionTitle, UnderConstruction
     ├── constants/
     │   └── tags.ts             # ALL_TAGS + tagLabels
     ├── content/
@@ -81,12 +84,12 @@ Defined in `src/App.tsx` (all wrapped in `<MotionConfig>` and a `bg-black` flex 
   - `ArtworkItem` — `id`, `title`, `image` (required) + optional `thumb`, `tags`, `username`, `width`, `height`.
   - `PriceTier`, `PriceCategory` (`{title, prices: PriceTier[]}`), `PatreonTier` (`{name, description, price, highlighted}`), `WaitlistResponse` (`{slots, total, entries}`), and `Paginated<T>` (`{items, total, page, perPage}`).
 - **`client.ts`** — Single `axios` instance with `baseURL: import.meta.env.VITE_API_URL ?? '/api'`.
-- **`setupMock.ts`** — Registers an `axios-mock-adapter` on the client **only when** `import.meta.env.DEV && import.meta.env.VITE_USE_MOCKS === 'true'` (`delayResponse: 400`). Endpoints:
+- **`setupMock.ts`** — Registers an `axios-mock-adapter` on the client **unconditionally** (the old `DEV + VITE_USE_MOCKS` gate was removed in the latest commits; `delayResponse: 400`), so it also serves as the static data source in production. Endpoints:
   - `GET /gallery` — supports `page`, `perPage`, and `tags` (CSV) filtering; returns `Paginated<ArtworkItem>`.
   - `GET /fanarts` — `page`/`perPage` pagination; returns `Paginated<ArtworkItem>`.
   - `GET /commissions/prices`, `GET /patreon/tiers`, `GET /waitlist` — static mock payloads.
 - **`mockData.ts`** — Imports `artworks.generated.json` (currently `[]`), splits into `galleryMock` (`!a.username`) and `fanartsMock` (`a.username`). Also exports `pricesMock`, `patreonTiersMock`, `waitlistMock`.
-- **`queries.ts`** — `import './setupMock'` (side-effect; registers mock in dev) then exports typed fetchers: `fetchGallery`, `fetchFanarts`, `fetchPrices`, `fetchPatreonTiers`, `fetchWaitlist`.
+- **`queries.ts`** — `import './setupMock'` (side-effect; registers the mock adapter — see gating below) then exports typed fetchers: `fetchGallery`, `fetchFanarts`, `fetchPrices`, `fetchPatreonTiers`, `fetchWaitlist`.
 
 ### `useQuery` hook (`src/hooks/useQuery.ts`)
 
@@ -94,10 +97,9 @@ Generic `useQuery<T>(queryFn, deps)` returning `{ data, loading, error }`. Cance
 
 ### Mock vs real backend gating
 
-- **Dev:** `VITE_USE_MOCKS=true` (`.env`) + `import.meta.env.DEV` → mock adapter intercepts `/api/*` and serves local data.
-- **Prod:** GitHub Actions sets `VITE_USE_MOCKS='false'` during `pnpm build` (see `static.yml`), so the mock registration is skipped and requests fall through to `VITE_API_URL` (the real backend).
-- The dev `/api` proxy in `vite.config.ts` points at `http://localhost:3000` for local real-backend work.
-- Note: `MockAdapter` is statically imported via `setupMock.ts` → `queries.ts`, so the module is part of the dependency graph. The *registration* is gated; no mock interception runs in production.
+- **Current reality:** the mock adapter registers **unconditionally** (`setupMock.ts:13`, statically imported from `queries.ts:1`), so both dev and production serve `/api/*` client-side from the committed manifest + static data. `VITE_USE_MOCKS` is a dead flag and the dev `/api` proxy in `vite.config.ts` (→ `localhost:3000`) is effectively unused.
+- **Decision pending (see `docs/PROJECT_STATUS.md` P0-1):** either keep this client-side fallback as the model (data updated per commit, no backend) or migrate to **Cloudflare Pages Functions** (`functions/api/*`, `public/_routes.json`) and re-gate the adapter to dev-only (`import.meta.env.DEV` + dynamic import).
+- **Prod (target of the migration):** `VITE_API_URL` stays `/api` (same origin); no build var needed.
 
 ## Components
 
@@ -112,13 +114,14 @@ Generic `useQuery<T>(queryFn, deps)` returning `{ data, loading, error }`. Cance
 
 **UI primitives (`src/components/ui/`):**
 - **`ArtworkGrid.tsx`** — `framer-motion` staggered grid (`grid-cols-2 md:3 lg:4`). Renders `art.thumb || art.image` for the tile, shows tag `Badge`s and (for fanarts) a `GlassCard` `username` overlay, opens a `Lightbox` on click/Enter/Space.
-- **`Badge.tsx`** — Pill tag; `variant` = `cyan` | `purple` | `white`.
+- **`Badge.tsx`** — Pill tag; `variant` = `cyan` | `purple` | `white` | `red`.
 - **`Button.tsx`** — `variant` = `primary` | `secondary` | `ghost`; renders `<Link>` if `to`, `<a>` if `href`, else `<button>`; supports `disabled`, `rel`.
 - **`FilterBar.tsx`** — Toggle chips for the active tag set; labels via `tagLabels` import.
 - **`GlassCard.tsx`** — Thin wrapper applying the `.glass` class.
 - **`Lightbox.tsx`** — Focus-trapped full-screen image overlay; shows `art.image` (full variant).
 - **`Pagination.tsx`** — First/Prev/`current/total`/Next/Last controls.
 - **`SectionTitle.tsx`** — Heading prefixed with cyan `// ` (renders `h1`/`h2`/`h3`).
+- **`UnderConstruction.tsx`** — "Under construction — content coming soon" overlay layered over sections awaiting real content (gallery grid, waitlist, prices, tiers, fanarts).
 
 ## Image Strategy
 
@@ -157,12 +160,13 @@ Two distinct sources:
 - **Fonts:** REM loaded from Google Fonts (`index.html`); **Font Awesome 6.5.2** from cdnjs (`index.html`).
 - **Theme:** Dark-only (black background) — no light/dark/system toggle.
 
-## CI / Deploy
+## Deploy (Cloudflare Pages — target)
 
-`.github/workflows/static.yml`:
-- Triggers: push to `main` + `workflow_dispatch`.
-- Job `deploy` (ubuntu-latest, Node 22, pnpm 9): checkout → `pnpm install --frozen-lockfile` → `pnpm lint` → `pnpm build` (with `VITE_USE_MOCKS='false'`) → `actions/configure-pages@v5` → SPA fallback `cp dist/index.html dist/404.html` → `upload-pages-artifact` → `deploy-pages`.
-- `vite.config.ts` sets `base: '/'`.
+- **Git integration**: build command `pnpm lint && pnpm build`, output directory `dist`, build vars `PNPM_VERSION=9.15.9` and `NODE_VERSION=22` (the v3 build image does not detect pnpm from the lockfile or `packageManager`).
+- **SPA routing**: do not create `404.html`; when no top-level `404.html` exists, Pages serves `index.html` for unmatched routes (SPA behavior).
+- **Functions**: `functions/api/*` serve `/api/*` (file-based routing) with `public/_routes.json` (`include: ["/api/*"]`) so static requests stay free/unlimited; free tier is 100k Function requests/day. The runtime "Fail open" setting keeps static assets served if the quota is exhausted.
+- **Custom domain**: attached from the Pages dashboard (no repo `CNAME` file); `vite.config.ts` sets `base: '/'`, correct for an apex/custom domain.
+- **Legacy**: `.github/workflows/static.yml` (GitHub Pages deploy, including `cp dist/index.html dist/404.html`) is pending removal or repurposing as PR-only CI — checklist in `docs/PROJECT_STATUS.md` P2-6.
 
 ## Env / Secrets
 
@@ -170,7 +174,7 @@ Two distinct sources:
 
 ```
 VITE_API_URL=/api
-VITE_USE_MOCKS=true
+VITE_USE_MOCKS=true   # currently a no-op — mocks register unconditionally (see gating section)
 R2_ACCOUNT_ID=
 R2_ACCESS_KEY_ID=
 R2_SECRET_ACCESS_KEY=
