@@ -10,6 +10,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "pnpm build && wrangler deploy",
+    "brand-assets": "node scripts/generate-brand-assets.mjs",
     "upload-artworks": "node scripts/upload-artworks.mjs"
   },
   "dependencies": {

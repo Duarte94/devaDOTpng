@@ -11,14 +11,14 @@
 - **Data layer:** `axios` 1.18 + `axios-mock-adapter` 2.1 (currently registered unconditionally, also in prod — see gating section).
 - **Image pipeline (build-time script):** `sharp` 0.35 + `@aws-sdk/client-s3` — uploads artwork to Cloudflare R2.
 - **Lint/typecheck:** `oxlint` + `tsc -b` (via `pnpm build`).
-- **Deploy:** **Cloudflare Workers** (static assets) via **Workers Builds** (Git integration) — live at `https://devadotpng.sasosmash.workers.dev`; build command `pnpm build`, deploy command `npx wrangler deploy`, build vars `PNPM_VERSION=9.15.9` + `NODE_VERSION=22`. Repo config in `wrangler.jsonc` (assets + SPA fallback) and `pnpm deploy` for manual deploys. Custom domain deferred — see `docs/PROJECT_STATUS.md` P2-6.
+- **Deploy:** **Cloudflare Workers** (static assets) via **Workers Builds** (Git integration) — live at `https://devamon.com.ar` (Custom Domain; `www` 301 → apex); build command `pnpm build`, deploy command `npx wrangler deploy`, build vars `PNPM_VERSION=9.15.9` + `NODE_VERSION=22`. Repo config in `wrangler.jsonc` (assets + SPA fallback) and `pnpm deploy` for manual deploys. See `docs/PROJECT_STATUS.md` P2-6.
 
 ## Directory Layout
 
 ```
 devaDOTpng/
-├── index.html                  # HTML shell; loads REM font (Google) + Font Awesome 6.5.2 (CDN)
-├── package.json                # Scripts: dev, build, lint, preview, deploy, upload-artworks
+├── index.html                  # HTML shell: SEO/social meta + icons; loads REM font (Google) + Font Awesome 6.5.2 (CDN)
+├── package.json                # Scripts: dev, build, lint, preview, deploy, brand-assets, upload-artworks
 ├── vite.config.ts              # react + tailwind plugins; base '/'; '/api' dev proxy → :3000
 ├── .env                        # local overrides (gitignored): VITE_API_URL (VITE_USE_MOCKS is currently a no-op — see gating)
 ├── .env.example                # documented env template (committed)
@@ -30,8 +30,9 @@ devaDOTpng/
 │   ├── PROJECT_STATUS.md       # Diagnóstico, pendientes y roadmap (deploy en CF Workers)
 │   └── upload-artworks.md      # Full guide to the R2 upload pipeline
 ├── scripts/
+│   ├── generate-brand-assets.mjs  # favicon + apple-touch + OG image from devasign.svg
 │   └── upload-artworks.mjs     # Generates WebP variants, uploads to R2, writes manifest
-├── public/                     # (planificado) favicon, OG image, robots/sitemap
+├── public/                     # favicon.svg/png, apple-touch-icon, icon-192/512, og-image, site.webmanifest, robots.txt, sitemap.xml
 ├── wrangler.jsonc              # Worker config: assets from ./dist + SPA fallback (+ future /api worker)
 └── src/
     ├── main.tsx                # React root mount + StrictMode
@@ -130,7 +131,7 @@ Two distinct sources:
    - `commission-banner.png`, `patreon-banner.png` (used by `Home`).
    - `Ani-Elfa.png` + `Ani-Elfa.webp` (used by `CommissionCard`).
    - `devasign.svg` (logo in `Navbar`/`Footer`).
-2. **R2-hosted artwork** (gallery + fanart only): high-res images live on Cloudflare R2, served via Cloudflare CDN at `https://cdn.deva.png`. Only the manifest is committed.
+2. **R2-hosted artwork** (gallery + fanart only): high-res images live on Cloudflare R2, served via Cloudflare CDN at `https://cdn.devamon.com.ar`. Only the manifest is committed.
 
 ### Upload pipeline (`scripts/upload-artworks.mjs`)
 - Reads raw images recursively from `artworks-src/` (gitignored; supported: png/jpg/jpeg/webp/avif/tiff).
@@ -160,10 +161,10 @@ Two distinct sources:
 
 ## Deploy (Cloudflare Workers — live)
 
-- **Hosting**: static-assets Worker `devadotpng`, deployed by **Workers Builds** (Git integration) — push to `main` → production (`https://devadotpng.sasosmash.workers.dev`), branches/PRs → preview builds. Build vars: `PNPM_VERSION=9.15.9`, `NODE_VERSION=22` (the build image does not detect them from the repo).
+- **Hosting**: static-assets Worker `devadotpng`, deployed by **Workers Builds** (Git integration) — push to `main` → production (`https://devamon.com.ar`), branches/PRs → preview builds. Build vars: `PNPM_VERSION=9.15.9`, `NODE_VERSION=22` (the build image does not detect them from the repo).
 - **Repo config**: `wrangler.jsonc` — `assets.directory: ./dist` + `not_found_handling: "single-page-application"` (SPA fallback for `BrowserRouter`; never add a `404.html`). Manual deploy: `pnpm deploy` (build + `wrangler deploy`); `pnpm-lock.yaml` committed for reproducible builds.
 - **Future `/api`** (if P0-1 option B): `src/worker.ts` + `assets.run_worker_first: ["/api/*"]`; static requests never invoke the Worker (free/unlimited), `/api/*` gets 100k requests/day on the free plan. KV available for a dynamic waitlist.
-- **Custom domain**: deferred; attach from the Worker dashboard as a Custom Domain (no repo `CNAME` file). `vite.config.ts` sets `base: '/'`, correct for an apex/custom domain. Update `og:url`/`canonical` when it changes.
+- **Custom domain**: `devamon.com.ar` attached as a **Custom Domain** of the Worker (Cloudflare manages the proxied DNS record). `www.devamon.com.ar` uses a proxied placeholder record + a **Redirect Rule** (`http.host eq "www.devamon.com.ar"` → 301 `https://devamon.com.ar` + path). No `CNAME` file in the repo; `vite.config.ts` keeps `base: '/'`. `og:url`, `canonical`, `sitemap.xml` and `robots.txt` point to the apex.
 - **Legacy**: `.github/workflows/static.yml` (GitHub Pages deploy) was deleted; disable GitHub Pages in the repo settings if still enabled (see `docs/PROJECT_STATUS.md` P2-6).
 
 ## Env / Secrets
@@ -177,7 +178,7 @@ R2_ACCOUNT_ID=
 R2_ACCESS_KEY_ID=
 R2_SECRET_ACCESS_KEY=
 R2_BUCKET=deva-artworks
-CDN_BASE_URL=https://cdn.deva.png
+CDN_BASE_URL=https://cdn.devamon.com.ar
 ```
 
 - `VITE_*` vars are inlined into the client bundle.

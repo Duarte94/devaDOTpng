@@ -20,7 +20,7 @@ const {
   R2_ACCESS_KEY_ID,
   R2_SECRET_ACCESS_KEY,
   R2_BUCKET = 'deva-artworks',
-  CDN_BASE_URL = 'https://cdn.deva.png',
+  CDN_BASE_URL = 'https://cdn.devamon.com.ar',
 } = process.env
 
 if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY) {

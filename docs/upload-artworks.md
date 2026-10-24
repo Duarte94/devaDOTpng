@@ -8,7 +8,7 @@ The script `scripts/upload-artworks.mjs` handles the full pipeline: reading raw 
 
 - A [Cloudflare](https://cloudflare.com) account (free tier works)
 - R2 enabled on your account (free tier includes 10 GB of storage)
-- Access to the domain's DNS settings (e.g. `deva.png`) so the image CDN subdomain can be proxied through Cloudflare
+- Access to the domain's DNS settings (e.g. `devamon.com.ar`) so the image CDN subdomain can be proxied through Cloudflare
 - Node.js 20+ and pnpm installed locally
 
 ## Manual setup (one-time)
@@ -22,11 +22,11 @@ The script `scripts/upload-artworks.mjs` handles the full pipeline: reading raw 
 
 ### 2. (Optional) Set up a custom subdomain
 
-For production, point a subdomain (e.g. `cdn.deva.png`) to the R2 bucket so images are served through Cloudflare's CDN cache:
+For production, point a subdomain (e.g. `cdn.devamon.com.ar`) to the R2 bucket so images are served through Cloudflare's CDN cache:
 
-1. In the bucket's **Settings → Custom Domains**, enter `cdn.deva.png` and connect it.
+1. In the bucket's **Settings → Custom Domains**, enter `cdn.devamon.com.ar` and connect it.
 2. Cloudflare will add a CNAME record automatically. Make sure the orange cloud (proxy) is enabled — this gives you free egress and CDN caching.
-3. Set `CDN_BASE_URL` in `.env` to `https://cdn.deva.png`.
+3. Set `CDN_BASE_URL` in `.env` to `https://cdn.devamon.com.ar`.
 
 > If you skip this step, use the bucket's `r2.dev` public URL as `CDN_BASE_URL` (e.g. `https://pub-XXXXXXXX.r2.dev`). Egress is still free.
 
@@ -50,7 +50,7 @@ R2_ACCOUNT_ID=<your-cloudflare-account-id>
 R2_ACCESS_KEY_ID=<your-r2-access-key-id>
 R2_SECRET_ACCESS_KEY=<your-r2-secret-access-key>
 R2_BUCKET=deva-artworks
-CDN_BASE_URL=https://cdn.deva.png
+CDN_BASE_URL=https://cdn.devamon.com.ar
 ```
 
 > `.env` is gitignored — secrets stay local.
@@ -145,8 +145,8 @@ The script slugs filenames into web-safe keys:
 
 | Source file | R2 key (thumb) | R2 key (full) | CDN URL |
 |-------------|----------------|----------------|---------|
-| `portrait-1.png` | `thumb-portrait-1.webp` | `full-portrait-1.webp` | `https://cdn.deva.png/thumb-portrait-1.webp` |
-| `Commission_Art.png` | `thumb-commission-art.webp` | `full-commission-art.webp` | `https://cdn.deva.png/full-commission-art.webp` |
+| `portrait-1.png` | `thumb-portrait-1.webp` | `full-portrait-1.webp` | `https://cdn.devamon.com.ar/thumb-portrait-1.webp` |
+| `Commission_Art.png` | `thumb-commission-art.webp` | `full-commission-art.webp` | `https://cdn.devamon.com.ar/full-commission-art.webp` |
 
 Special characters are stripped, spaces become hyphens.
 

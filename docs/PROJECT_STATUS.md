@@ -2,9 +2,9 @@
 
 > Documento de diagnóstico y roadmap — devaDOTpng (portfolio de **Deva.png**).
 > Base de referencia: commit `a0725ca` + deploy en Cloudflare Workers (2026-10-19).
-> Verificación actual: `tsc --noEmit`/`oxlint`/build limpios · deploy live en Workers Builds (`https://devadotpng.sasosmash.workers.dev`) sirviendo datos client-side (mocks siempre activos — ver P0-1).
+> Verificación actual: `tsc --noEmit`/`oxlint`/build limpios · deploy live en Workers Builds (`https://devamon.com.ar`) sirviendo datos client-side (mocks siempre activos — ver P0-1).
 >
-> **Deploy actual: Cloudflare Workers (static assets) vía Workers Builds (Git integration)** — `https://devadotpng.sasosmash.workers.dev`. Dominio propio diferido (se usa el subdominio `workers.dev` por ahora). Detalles y pendientes en P2-6.
+> **Deploy actual: Cloudflare Workers (static assets) vía Workers Builds (Git integration)** — `https://devamon.com.ar` (Custom Domain) con `www.devamon.com.ar` redirigiendo 301 al apex. Detalles y pendientes en P2-6.
 
 ---
 
@@ -16,8 +16,8 @@ Lo que falta es de otra naturaleza:
 
 1. **La estrategia de datos de producción quedó implícita.** El sitio ya está deployado y funciona sin backend: los mocks se registran siempre (`setupMock.ts:13`), con datos congelados al commit y `VITE_USE_MOCKS` sin efecto. Falta decidir si ese modelo (fallback client-side) es el definitivo o si se agrega una API `/api` en el Worker (P0-1).
 2. **No hay contenido real**: `src/api/artworks.generated.json` está vacío (`[]`); hoy lo tapa un seed de demo en `mockData.ts` (5+3 placeholders SVG) + overlay `UnderConstruction`.
-3. **Quedan placeholders visibles** en CTAs principales ("MAKE YOUR REQUEST" → `/`, Trello genérico, Patreon genérico, botones sociales muertos).
-4. **Deuda de pulido**: sin favicon/OG image, años desactualizados, typos en el ToS, un bug de accesibilidad en `CommissionCard`, assets muertos de ~3 MB y ausencia total de tests.
+3. **Quedan placeholders visibles** en CTAs principales ("MAKE YOUR REQUEST" → `/`, Trello genérico, Patreon genérico de Home). Los botones sociales (Discord/Instagram/X) ya tienen sus URLs reales (P0-4).
+4. **Deuda de pulido**: años desactualizados, typos en el ToS, un bug de accesibilidad en `CommissionCard`, assets muertos de ~3 MB y ausencia total de tests. (Favicon/OG/robots/sitemap ya resueltos — P1-2.)
 
 ---
 
@@ -33,7 +33,7 @@ Lo que falta es de otra naturaleza:
 - **Terms**: contenido estructurado en `content/tos.tsx`, reusable por modal y página.
 - **Capa de datos mock**: axios + `axios-mock-adapter` con paginación y filtrado server-like, registrado **incondicionalmente** (`src/api/setupMock.ts:13`) — funciona como fallback estático también en producción.
 - **Pipeline de imágenes**: `scripts/upload-artworks.mjs` (sharp → WebP thumb/full → R2 → manifest), documentado en `docs/upload-artworks.md`.
-- **Deploy actual**: Cloudflare Workers (static assets) con **Workers Builds** (Git integration): cada push a `main` deploya a `https://devadotpng.sasosmash.workers.dev` (branches/PRs generan previews). Config en `wrangler.jsonc` (`assets.directory: ./dist` + SPA fallback) y deploy manual vía `pnpm deploy`. El workflow legacy de GitHub Pages (`.github/workflows/static.yml`) fue eliminado (P2-6).
+- **Deploy actual**: Cloudflare Workers (static assets) con **Workers Builds** (Git integration): cada push a `main` deploya a `https://devamon.com.ar` (Custom Domain; `www` → 301 al apex; branches/PRs generan previews). Config en `wrangler.jsonc` (`assets.directory: ./dist` + SPA fallback) y deploy manual vía `pnpm deploy`. El workflow legacy de GitHub Pages (`.github/workflows/static.yml`) fue eliminado (P2-6).
 - **Accesibilidad base**: `useFocusTrap`, cierre con Escape en modales/drawer, `aria-modal`, `aria-pressed` en filtros, `focus-visible` cyan global, `MotionConfig reducedMotion="user"`.
 
 ---
@@ -113,8 +113,8 @@ Además: agregar al `README.md` la sección de setup (`pnpm install` → `pnpm d
 | `src/pages/Commissions.tsx:47-54` | Botón "MAKE YOUR REQUEST" → `to="/"` | Formulario real (Google Forms/Tally) o DM de Discord; idealmente una ruta `/request` propia más adelante |
 | `src/pages/Commissions.tsx:55` | `href="https://trello.com"` | URL del tablero real de la artista |
 | `src/pages/Home.tsx:92` | `href="https://patreon.com"` | `https://patreon.com/deva.png` (como ya hacen `Nsfw.tsx:68` y `Footer.tsx:15`) |
-| `src/components/Navbar.tsx:84-92` | Botones Discord/Instagram/X sin `href` | Links reales de la artista |
-| `src/components/Navbar.tsx:157-165` | Mismos botones en drawer móvil, sin `href` | Links reales (ya no tienen `tabIndex={-1}`/`aria-hidden` — corregido en los últimos commits) |
+| `src/components/Navbar.tsx:84-92` | ~~Botones Discord/Instagram/X sin `href`~~ | ✅ Hecho: `<a target="_blank" rel="noopener noreferrer">` con `discord.gg/VNnxWzEF2F`, `instagram.com/deva.png`, `x.com/DevaMeeks` |
+| `src/components/Navbar.tsx:157-165` | ~~Mismos botones en drawer móvil, sin `href`~~ | ✅ Hecho: mismos links en el drawer móvil |
 
 **Solución estructural:** centralizar en `src/constants/links.ts`:
 
@@ -131,8 +131,9 @@ export const LINKS = {
 
 y consumirlo desde `Navbar`, `Footer`, `Home`, `Commissions`, `Nsfw`. Los botones sociales deberían ser `<a>` (o `Button href`) con `target="_blank" rel="noopener noreferrer"`.
 
-- [ ] Pedir a la artista las URLs reales (Discord, IG, X, Trello, form de request).
-- [ ] Crear `constants/links.ts` y reemplazar los 6 puntos.
+- [x] URLs reales de Discord, Instagram y X en `Navbar` (desktop + móvil).
+- [ ] Pedir a la artista las URLs de Trello y del form de request.
+- [ ] Crear `constants/links.ts` y centralizar los links (hoy las redes están inline en `Navbar`).
 
 ---
 
@@ -152,33 +153,18 @@ y consumirlo desde `Navbar`, `Footer`, `Home`, `Commissions`, `Nsfw`. Los botone
 
 ### P1-2 · SEO / social / favicon
 
-- No existe `public/` → **sin favicon** (la pestaña muestra el ícono por defecto) ni `apple-touch-icon`.
-- `index.html:8-12`: falta `og:image` (los links compartidos en Discord/Twitter no muestran preview), faltan `theme-color` y `twitter:image`. `og:url` y `<link rel="canonical">` ya apuntan a `https://devadotpng.sasosmash.workers.dev` (provisional — actualizar al configurar el dominio propio).
-- `title`/descripción dicen "DevaDOTpng", mientras la marca es "Deva.png".
-- Sin `robots.txt` ni `sitemap.xml`.
+**Estado: resuelto** (2026-10-24) sobre el dominio final `https://devamon.com.ar`.
 
-**Solución:**
+- `public/` creado con `favicon.svg` + `favicon-32x32.png`, `apple-touch-icon.png` (180×180), `icon-192.png` / `icon-512.png`, `og-image.png` (1200×630), `site.webmanifest`, `robots.txt` y `sitemap.xml`.
+- Los assets se generan con `pnpm brand-assets` (`scripts/generate-brand-assets.mjs`) a partir de `src/assets/devasign.svg` (glifo “D” para el favicon, wordmark completo para el OG), así se pueden regenerar si cambia el logo.
+- `index.html`: `canonical`, `og:url`, `og:image` (+ width/height/alt), `twitter:card/title/description/image`, `theme-color`, `<link rel="icon">` (SVG + PNG 32×32), `apple-touch-icon` y `manifest`.
+- Título y `og:title` pasaron de “DevaDOTpng” a “Deva.png — Artist Portfolio”.
+- `robots.txt` referencia `https://devamon.com.ar/sitemap.xml`; el sitemap lista las 6 rutas estáticas (`/`, `/gallery`, `/commissions`, `/fanarts`, `/nsfw`, `/terms`).
+- Verificación: `curl -I https://devamon.com.ar/og-image.png`, `/robots.txt` y `/sitemap.xml` (200) + validadores de Discord/X.
 
-1. Crear `public/` con: `favicon.svg` (logo `devasign.svg` adaptado a 32×32), `apple-touch-icon.png` (180×180), `og-image.png` (1200×630, arte + nombre), `site.webmanifest`.
-2. Completar `index.html` (con el dominio propio, cuando exista; mientras tanto vale `https://devadotpng.sasosmash.workers.dev`, ya aplicado en `og:url`/`canonical`):
-
-```html
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-<meta name="theme-color" content="#000000" />
-<link rel="canonical" href="https://<dominio>/" />
-<meta property="og:url" content="https://<dominio>/" />
-<meta property="og:image" content="https://<dominio>/og-image.png" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta name="twitter:image" content="https://<dominio>/og-image.png" />
-```
-
-3. `public/robots.txt` + `public/sitemap.xml` con las 6 rutas estáticas (URLs sobre `<dominio>`).
-4. Configurar el dominio propio en el Worker (Custom Domain, P2-6) y ajustar `CDN_BASE_URL` de R2 para que sea subdominio del mismo dominio (ej. `https://cdn.<dominio>`) — así los manifests futuros quedan consistentes.
-
-- [ ] Definir dominio definitivo y reemplazar `<dominio>`.
-- [ ] Crear `public/` (favicon, apple-touch, OG, manifest, robots, sitemap) y actualizar `index.html`.
+- [x] Definir dominio definitivo (`devamon.com.ar`) y aplicarlo en metas/sitemap/robots.
+- [x] Crear `public/` (favicon, apple-touch, OG, manifest, robots, sitemap) y actualizar `index.html`.
+- [x] Ajustar `CDN_BASE_URL` de R2 a `https://cdn.devamon.com.ar` (script + `.env.example` + docs).
 
 ### P1-3 · Bug de accesibilidad en `CommissionCard`
 
@@ -290,27 +276,28 @@ No hay ningún test ni framework configurado; el CI solo corre lint + build. Mí
 
 ### P2-6 · Deploy en Cloudflare Workers (Workers Builds)
 
-**Estado: deployado y funcionando** en `https://devadotpng.sasosmash.workers.dev` (Worker `devadotpng`, static assets). Hecho:
+**Estado: deployado y funcionando** en `https://devamon.com.ar` (Worker `devadotpng`, static assets, Custom Domain). Hecho:
 
 - Proyecto Worker creado con **Git integration (Workers Builds)**: push a `main` → deploy de producción; branches/PRs → previews.
 - Config reproducible en el repo: `wrangler.jsonc` (`assets.directory: ./dist`, `not_found_handling: "single-page-application"`) + script `pnpm deploy` para deploy manual.
+- **Dominio propio activo**: `devamon.com.ar` adjuntado como Custom Domain del Worker (Cloudflare gestiona el registro proxied; sin `CNAME` en el repo). `www.devamon.com.ar` resuelve vía registro proxied + **Redirect Rule** 301 al apex (matchea `http.host` sin importar el esquema).
 - SPA routing verificado: `/`, `/gallery`, `/fanarts` y rutas inexistentes devuelven `index.html` 200 (correcto: no existe `404.html`).
 - `pnpm-lock.yaml` regenerado/commiteado (P2-3) y workflow legacy de GH Pages (`.github/workflows/static.yml`) eliminado.
-- `og:url`/`canonical` apuntan a la URL del Worker (provisional).
+- `og:url`/`canonical` apuntan a `https://devamon.com.ar/`; `og:image`, favicon, `robots.txt` y `sitemap.xml` se sirven desde `public/` (P1-2).
 - Verificación visual con Playwright (2026-10-19): 7 rutas 200, **0 errores de consola/requests fallidos**, waitlist `Anon1..5` y estado `OPEN` en Home, seed de demo + overlay `UnderConstruction` en Gallery/Fanarts, flujo ToS (checkbox → modal → Accept → precios) OK, tiers de Patreon OK, 404 OK, drawer móvil (390px) OK.
 
 **Pendientes:**
 
-1. **Build settings en el dashboard de Workers Builds** (Settings → Build): build command `pnpm build`, deploy command `npx wrangler deploy`, build vars `PNPM_VERSION=9.15.9` y `NODE_VERSION=22` (la build image no los detecta del repo). Verificar que el build de `main` corra con el lockfile nuevo.
-2. **Dominio propio** (diferido): Custom Domain del Worker desde el dashboard. Al configurarlo, actualizar `og:url`/`canonical` (`index.html`) y, cuando existan, sitemap/robots (P1-2). `base: '/'` de `vite.config.ts:7` es correcto.
+1. ~~Build settings en el dashboard de Workers Builds~~ ✅ Verificado: build command `pnpm build`, deploy command `npx wrangler deploy`, build vars `PNPM_VERSION=9.15.9` y `NODE_VERSION=22`; cada push a `main` deploya en ~40 s.
+2. ~~Dominio propio~~ ✅ Activo: `devamon.com.ar` como Custom Domain + `www` con Redirect Rule 301 al apex. `og:url`/`canonical`/`sitemap`/`robots` ya usan `https://devamon.com.ar` (P1-2). `base: '/'` de `vite.config.ts:7` es correcto.
 3. **GitHub Pages**: deshabilitarlo en Settings del repo si sigue activo (el workflow ya no existe; no debe quedar nada publicando ahí).
 4. **API `/api` en el Worker** (si se elige P0-1 opción B): `src/worker.ts` + `assets.run_worker_first: ["/api/*"]` en `wrangler.jsonc`; KV para waitlist dinámica si hace falta.
 5. **Observabilidad** (opcional): Workers Analytics (gratis) para requests/errores; notificaciones de build fallido.
 
 - [x] Proyecto con Git integration + SPA verificado + `wrangler.jsonc` + lockfile.
-- [ ] Verificar/cargar build vars (`PNPM_VERSION`, `NODE_VERSION`) en el dashboard.
+- [x] Build vars (`PNPM_VERSION`, `NODE_VERSION`) verificadas en Workers Builds.
+- [x] Dominio propio (`devamon.com.ar`) + `www` 301 al apex + SEO assets (P1-2).
 - [ ] Deshabilitar GitHub Pages en el repo (si sigue activo).
-- [ ] Configurar dominio propio cuando se decida.
 
 ### P2-7 · Otras observaciones menores
 
@@ -332,11 +319,11 @@ No hay ningún test ni framework configurado; el CI solo corre lint + build. Mí
 4. P0-4: crear `constants/links.ts` (puede quedar con URLs pendientes marcadas) y arreglar el Patreon genérico de Home.
 5. P0-2 (mitigación): seed de demo si aún no hay artwork.
 
-**Criterio de salida:** el sitio en `https://devadotpng.sasosmash.workers.dev` (o dominio propio, si se configura) muestra galería, precios, tiers y waitlist sin errores, con deep links funcionando.
+**Criterio de salida:** el sitio en `https://devamon.com.ar` muestra galería, precios, tiers y waitlist sin errores, con deep links funcionando.
 
 ### Iteración 2 — Contenido y cara pública (1–2 sesiones)
 1. P0-2: subir artworks reales a R2 y commitear el manifest.
-2. P1-2: `public/` completo (favicon, OG, robots, sitemap) + meta del `index.html` con el dominio real.
+2. P1-2: ~~`public/` completo (favicon, OG, robots, sitemap) + meta del `index.html` con el dominio real~~ ✅ Hecho (2026-10-24).
 3. P1-4: años dinámicos + typos del ToS.
 4. P1-1: status de comisión data-driven.
 
