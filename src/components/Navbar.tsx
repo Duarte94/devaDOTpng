@@ -81,15 +81,15 @@ export default function Navbar() {
               </NavLink>
             ))}
             <div className="flex items-center gap-2 ml-4 pl-4 border-l border-white/10">
-              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
+              <a href="https://discord.gg/VNnxWzEF2F" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
                 <i className="fa-brands fa-discord fa-sm" />
-              </button>
-              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
+              </a>
+              <a href="https://www.instagram.com/deva.png/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
                 <i className="fa-brands fa-instagram fa-sm" />
-              </button>
-              <button type="button" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
+              </a>
+              <a href="https://x.com/DevaMeeks" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-9 h-9 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
                 <i className="fa-brands fa-x-twitter fa-sm" />
-              </button>
+              </a>
             </div>
           </div>
         )}
@@ -154,15 +154,15 @@ export default function Navbar() {
                 </div>
 
                 <div className="shrink-0 flex bg-[#0a0a0a] justify-center gap-4 p-2 border-t border-white/10">
-                  <button type="button" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
+                  <a href="https://discord.gg/VNnxWzEF2F" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Discord">
                     <i className="fa-brands fa-discord fa-sm" />
-                  </button>
-                  <button type="button" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
+                  </a>
+                  <a href="https://www.instagram.com/deva.png/" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Instagram">
                     <i className="fa-brands fa-instagram fa-sm" />
-                  </button>
-                  <button type="button" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
+                  </a>
+                  <a href="https://x.com/DevaMeeks" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center w-11 h-11 glass rounded-lg text-white/70 hover:text-cyan hover:border-cyan/30 transition-all duration-200 cursor-pointer" aria-label="Twitter / X">
                     <i className="fa-brands fa-x-twitter fa-sm" />
-                  </button>
+                  </a>
                 </div>
               </motion.aside>
             </>
